@@ -33,53 +33,55 @@ namespace Sales___Inventory_Log_In
 
             private void btnLogin_Click(object sender, EventArgs e)
             {
-                if (dashboardOpened)
-                    return;
+            if (dashboardOpened)
+                return;
 
-                string username = txtUsername.Text.Trim();
-                string password = txtPassword.Text;
+            string username = txtUsername.Text.Trim();
+            string password = txtPassword.Text;
 
-                string selectedRole = "";
+            string selectedRole = "";
 
-                if (rbAdmin.Checked)
-                {
-                    selectedRole = "Admin";
-                }
-                else if (rbCashier.Checked)
-                {
-                    selectedRole = "Cashier";
-                }
-                else if (rbInventory.Checked)
-                {
-                    selectedRole = "Inventory";
-                }
+            if (rbAdmin.Checked)
+            {
+                selectedRole = "Admin";
+            }
+            else if (rbCashier.Checked)
+            {
+                selectedRole = "Cashier";
+            }
+            else if (rbInventory.Checked)
+            {
+                selectedRole = "Inventory";
+            }
 
-                if (string.IsNullOrWhiteSpace(username))
-                {
-                    MessageBox.Show(
-                        "Please enter your username.",
-                        "Login",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning
-                    );
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                MessageBox.Show(
+                    "Please enter your username.",
+                    "Login",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
 
-                    txtUsername.Focus();
-                    return;
-                }
+                txtUsername.Focus();
+                return;
+            }
 
-                if (string.IsNullOrWhiteSpace(password))
-                {
-                    MessageBox.Show(
-                        "Please enter your password.",
-                        "Login",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning
-                    );
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                MessageBox.Show(
+                    "Please enter your password.",
+                    "Login",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
 
-                    txtPassword.Focus();
-                    return;
-                }
+                txtPassword.Focus();
+                return;
+            }
 
+            try
+            {
                 bool loginSuccessful = authService.Login(
                     username,
                     password,
@@ -112,52 +114,58 @@ namespace Sales___Inventory_Log_In
                     txtPassword.Focus();
                 }
             }
-
-            private void OpenDashboard(string role)
+            catch (Exception ex)
             {
-                Form dashboard = null;
-
-                if (role == "Admin")
-                {
-                    dashboard = new AdminForm();
-                }
-                else if (role == "Cashier")
-                {
-                    dashboard = new CashierForm();
-                }
-                else if (role == "Inventory")
-                {
-                    dashboard = new InventoryForm();
-                }
-
-                if (dashboard != null)
-                {
-                    this.Hide();
-
-                    dashboard.FormClosed += Dashboard_FormClosed;
-
-                    dashboard.Show();
-                }
-                else
-                {
-                    dashboardOpened = false;
-
-                    MessageBox.Show(
-                        "Unable to open the selected dashboard.",
-                        "Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
-                    );
-                }
-            }
-
-            private void Dashboard_FormClosed(object sender, FormClosedEventArgs e)
-            {
-                this.Close();
-            }
-
-            private void LoginForm_Load(object sender, EventArgs e)
-            {
+                MessageBox.Show(
+                    "Database connection error:\n\n" + ex.Message,
+                    "Database Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
             }
         }
+
+        private void OpenDashboard(string role)
+        {
+            Form dashboard = null;
+
+            if (role == "Admin")
+            {
+                dashboard = new AdminForm();
+            }
+            else if (role == "Cashier")
+            {
+                dashboard = new CashierForm();
+            }
+            else if (role == "Inventory")
+            {
+                dashboard = new InventoryForm();
+            }
+
+            if (dashboard != null)
+            {
+                this.Hide();
+
+                dashboard.FormClosed += Dashboard_FormClosed;
+
+                dashboard.Show();
+            }
+            else
+            {
+                dashboardOpened = false;
+
+                MessageBox.Show(
+                    "Dashboard could not be opened.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+        }
+
+        private void Dashboard_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.Close();
+        }
     }
+}
