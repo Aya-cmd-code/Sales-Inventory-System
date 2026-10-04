@@ -31,9 +31,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tusg = new System.Windows.Forms.Label();
-            this.lblTodaysSales = new System.Windows.Forms.Label();
+            this.lblTodaySales = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.lblTransaction = new System.Windows.Forms.Label();
+            this.lblTransactions = new System.Windows.Forms.Label();
             this.sdsdsd = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.lblCustomerServed = new System.Windows.Forms.Label();
@@ -103,7 +103,7 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.tusg);
-            this.panel1.Controls.Add(this.lblTodaysSales);
+            this.panel1.Controls.Add(this.lblTodaySales);
             this.panel1.Location = new System.Drawing.Point(33, 26);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
@@ -122,22 +122,22 @@
             this.tusg.TabIndex = 8;
             this.tusg.Text = "Today\'s Sales";
             // 
-            // lblTodaysSales
+            // lblTodaySales
             // 
-            this.lblTodaysSales.AutoSize = true;
-            this.lblTodaysSales.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTodaysSales.ForeColor = System.Drawing.Color.Navy;
-            this.lblTodaysSales.Location = new System.Drawing.Point(15, 27);
-            this.lblTodaysSales.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblTodaysSales.Name = "lblTodaysSales";
-            this.lblTodaysSales.Size = new System.Drawing.Size(83, 18);
-            this.lblTodaysSales.TabIndex = 9;
-            this.lblTodaysSales.Text = "₱8,540.00";
+            this.lblTodaySales.AutoSize = true;
+            this.lblTodaySales.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTodaySales.ForeColor = System.Drawing.Color.Navy;
+            this.lblTodaySales.Location = new System.Drawing.Point(15, 27);
+            this.lblTodaySales.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblTodaySales.Name = "lblTodaySales";
+            this.lblTodaySales.Size = new System.Drawing.Size(83, 18);
+            this.lblTodaySales.TabIndex = 9;
+            this.lblTodaySales.Text = "₱8,540.00";
             // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.White;
-            this.panel2.Controls.Add(this.lblTransaction);
+            this.panel2.Controls.Add(this.lblTransactions);
             this.panel2.Controls.Add(this.sdsdsd);
             this.panel2.Location = new System.Drawing.Point(233, 26);
             this.panel2.Margin = new System.Windows.Forms.Padding(2);
@@ -145,17 +145,17 @@
             this.panel2.Size = new System.Drawing.Size(162, 56);
             this.panel2.TabIndex = 2;
             // 
-            // lblTransaction
+            // lblTransactions
             // 
-            this.lblTransaction.AutoSize = true;
-            this.lblTransaction.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTransaction.ForeColor = System.Drawing.Color.Navy;
-            this.lblTransaction.Location = new System.Drawing.Point(13, 27);
-            this.lblTransaction.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblTransaction.Name = "lblTransaction";
-            this.lblTransaction.Size = new System.Drawing.Size(26, 18);
-            this.lblTransaction.TabIndex = 11;
-            this.lblTransaction.Text = "12";
+            this.lblTransactions.AutoSize = true;
+            this.lblTransactions.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTransactions.ForeColor = System.Drawing.Color.Navy;
+            this.lblTransactions.Location = new System.Drawing.Point(13, 27);
+            this.lblTransactions.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblTransactions.Name = "lblTransactions";
+            this.lblTransactions.Size = new System.Drawing.Size(26, 18);
+            this.lblTransactions.TabIndex = 11;
+            this.lblTransactions.Text = "12";
             // 
             // sdsdsd
             // 
@@ -574,6 +574,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "CashierForm";
             this.Text = "CashierForm";
+            this.Load += new System.EventHandler(this.CashierForm_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -608,8 +609,8 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label tusg;
-        private System.Windows.Forms.Label lblTodaysSales;
-        private System.Windows.Forms.Label lblTransaction;
+        private System.Windows.Forms.Label lblTodaySales;
+        private System.Windows.Forms.Label lblTransactions;
         private System.Windows.Forms.Label sdsdsd;
         private System.Windows.Forms.Label lblCustomerServed;
         private System.Windows.Forms.Label fdf;

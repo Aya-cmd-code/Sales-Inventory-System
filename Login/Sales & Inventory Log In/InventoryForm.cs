@@ -91,16 +91,16 @@ namespace Sales___Inventory_Log_In
                     {
                         if (reader.Read())
                         {
-                            gfd.Text =
+                            lblTotalProducts.Text =
                                 Convert.ToInt32(reader[0]).ToString();
 
-                            gnf.Text =
+                            lblLowStockItems.Text =
                                 Convert.ToInt32(reader[1]).ToString();
 
                             lblOutOfStocks.Text =
                                 Convert.ToInt32(reader[2]).ToString();
 
-                            bdhcbdj.Text =
+                            lblTotalStockValue.Text =
                                 "₱" +
                                 Convert.ToDecimal(reader[3]).ToString("N2");
                         }
@@ -191,11 +191,11 @@ namespace Sales___Inventory_Log_In
                     DataTable table = new DataTable();
                     adapter.Fill(table);
 
-                    dhsk.DataSource = table;
+                    dgvRecentInventory.DataSource = table;
                 }
             }
 
-            dhsk.AutoSizeColumnsMode =
+            dgvRecentInventory.AutoSizeColumnsMode =
                 DataGridViewAutoSizeColumnsMode.Fill;
         }
 

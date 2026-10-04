@@ -52,7 +52,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.panel9 = new System.Windows.Forms.Panel();
-            this.dhsk = new System.Windows.Forms.DataGridView();
+            this.dgvRecentInventory = new System.Windows.Forms.DataGridView();
             this.panel10 = new System.Windows.Forms.Panel();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -86,7 +86,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvStockLevels)).BeginInit();
             this.panel4.SuspendLayout();
             this.panel9.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dhsk)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRecentInventory)).BeginInit();
             this.panel10.SuspendLayout();
             this.panel11.SuspendLayout();
             this.panel12.SuspendLayout();
@@ -354,19 +354,19 @@
             // 
             // panel9
             // 
-            this.panel9.Controls.Add(this.dhsk);
+            this.panel9.Controls.Add(this.dgvRecentInventory);
             this.panel9.Location = new System.Drawing.Point(445, 120);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(442, 180);
             this.panel9.TabIndex = 18;
             // 
-            // dhsk
+            // dgvRecentInventory
             // 
-            this.dhsk.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dhsk.Location = new System.Drawing.Point(9, 6);
-            this.dhsk.Name = "dhsk";
-            this.dhsk.Size = new System.Drawing.Size(425, 169);
-            this.dhsk.TabIndex = 1;
+            this.dgvRecentInventory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvRecentInventory.Location = new System.Drawing.Point(9, 6);
+            this.dgvRecentInventory.Name = "dgvRecentInventory";
+            this.dgvRecentInventory.Size = new System.Drawing.Size(425, 169);
+            this.dgvRecentInventory.TabIndex = 1;
             // 
             // panel10
             // 
@@ -623,6 +623,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "InventoryForm";
             this.Text = "InventoryForm";
+
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
             this.panel6.ResumeLayout(false);
@@ -640,7 +641,7 @@
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel9.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dhsk)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRecentInventory)).EndInit();
             this.panel10.ResumeLayout(false);
             this.panel10.PerformLayout();
             this.panel11.ResumeLayout(false);
@@ -687,7 +688,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Panel panel13;
-        private System.Windows.Forms.DataGridView dhsk;
+        private System.Windows.Forms.DataGridView dgvRecentInventory;
         private System.Windows.Forms.DataGridView dgvInventory;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;

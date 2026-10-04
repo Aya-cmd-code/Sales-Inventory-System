@@ -1,13 +1,7 @@
 ﻿using Sales_Inventory_Log_In;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Sales___Inventory_Log_In
@@ -16,6 +10,7 @@ namespace Sales___Inventory_Log_In
     {
         private DatabaseConnection database;
         private int selectedSaleID = 0;
+
         public CashierForm()
         {
             InitializeComponent();
@@ -24,6 +19,11 @@ namespace Sales___Inventory_Log_In
 
             txtUnitPrice.ReadOnly = true;
             txtTotalAmount.ReadOnly = true;
+
+            lblTodaySales.Text = "₱0.00";
+            lblTransactions.Text = "0";
+            lblCustomerServed.Text = "0";
+            lblAverageOrderValue.Text = "₱0.00";
 
             btnAddSale.Click -= btnAddSale_Click;
             btnAddSale.Click += btnAddSale_Click;
@@ -174,66 +174,52 @@ namespace Sales___Inventory_Log_In
 
                 string query = @"
                     SELECT
-                        ISNULL(SUM(TotalAmount), 0),
-                        COUNT(*),
-                        (
-                            SELECT COUNT(DISTINCT CustomerID)
-                            FROM Sales
-                            WHERE CustomerID IS NOT NULL
-                        ),
-                        ISNULL(AVG(TotalAmount), 0)
+                        ISNULL(SUM(TotalAmount), 0) AS TodaySales,
+
+                        COUNT(*) AS Transactions,
+
+                        COUNT(DISTINCT CustomerID) AS CustomersServed,
+
+                        ISNULL(AVG(TotalAmount), 0) AS AverageOrderValue
+
                     FROM Sales
+
                     WHERE CAST(SaleDate AS DATE) = CAST(GETDATE() AS DATE)";
 
                 using (SqlCommand command =
                     new SqlCommand(query, connection))
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader =
+                        command.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            string todaySales =
-                                "₱" +
-                                Convert.ToDecimal(reader[0]).ToString("N2");
+                            decimal todaySales =
+                                Convert.ToDecimal(reader["TodaySales"]);
 
-                            string transactions =
-                                Convert.ToInt32(reader[1]).ToString();
+                            int transactions =
+                                Convert.ToInt32(reader["Transactions"]);
 
-                            string customers =
-                                Convert.ToInt32(reader[2]).ToString();
+                            int customersServed =
+                                Convert.ToInt32(reader["CustomersServed"]);
 
-                            string average =
-                                "₱" +
-                                Convert.ToDecimal(reader[3]).ToString("N2");
+                            decimal averageOrderValue =
+                                Convert.ToDecimal(reader["AverageOrderValue"]);
 
-                            SetLabelIfExists(
-                                "lblTodaySales",
-                                todaySales);
+                            lblTodaySales.Text =
+                                "₱" + todaySales.ToString("N2");
 
-                            SetLabelIfExists(
-                                "lblTransactions",
-                                transactions);
+                            lblTransactions.Text =
+                                transactions.ToString();
 
-                            SetLabelIfExists(
-                                "lblCustomerServed",
-                                customers);
+                            lblCustomerServed.Text =
+                                customersServed.ToString();
 
-                            SetLabelIfExists(
-                                "lblAverageOrderValue",
-                                average);
+                            lblAverageOrderValue.Text =
+                                "₱" + averageOrderValue.ToString("N2");
                         }
                     }
                 }
-            }
-        }
-
-        private void SetLabelIfExists(string name, string value)
-        {
-            Control[] controls = Controls.Find(name, true);
-
-            if (controls.Length > 0)
-            {
-                controls[0].Text = value;
             }
         }
 
@@ -244,7 +230,8 @@ namespace Sales___Inventory_Log_In
             if (cmbProduct.SelectedIndex == -1)
                 return;
 
-            DataRowView row = cmbProduct.SelectedItem as DataRowView;
+            DataRowView row =
+                cmbProduct.SelectedItem as DataRowView;
 
             if (row == null)
                 return;
@@ -336,7 +323,8 @@ namespace Sales___Inventory_Log_In
             decimal total =
                 decimal.Parse(txtTotalAmount.Text);
 
-            using (SqlConnection connection = database.GetConnection())
+            using (SqlConnection connection =
+                database.GetConnection())
             {
                 connection.Open();
 
@@ -496,7 +484,12 @@ namespace Sales___Inventory_Log_In
 
                     transaction.Commit();
 
-                    MessageBox.Show("Sale added successfully.");
+                    MessageBox.Show(
+                        "Sale added successfully.",
+                        "Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
 
                     LoadCashierDashboard();
                 }
@@ -540,7 +533,8 @@ namespace Sales___Inventory_Log_In
             decimal total =
                 decimal.Parse(txtTotalAmount.Text);
 
-            using (SqlConnection connection = database.GetConnection())
+            using (SqlConnection connection =
+                database.GetConnection())
             {
                 connection.Open();
 
@@ -589,7 +583,8 @@ namespace Sales___Inventory_Log_In
 
                     string restoreQuery = @"
                         UPDATE Products
-                        SET StockQty = StockQty + @Quantity,
+                        SET
+                            StockQty = StockQty + @Quantity,
                             LastUpdated = GETDATE()
                         WHERE ProductID = @ProductID";
 
@@ -719,7 +714,8 @@ namespace Sales___Inventory_Log_In
 
                     string deductQuery = @"
                         UPDATE Products
-                        SET StockQty = StockQty - @Quantity,
+                        SET
+                            StockQty = StockQty - @Quantity,
                             LastUpdated = GETDATE()
                         WHERE ProductID = @ProductID";
 
@@ -742,7 +738,12 @@ namespace Sales___Inventory_Log_In
 
                     transaction.Commit();
 
-                    MessageBox.Show("Sale updated successfully.");
+                    MessageBox.Show(
+                        "Sale updated successfully.",
+                        "Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
 
                     LoadCashierDashboard();
                 }
@@ -778,7 +779,8 @@ namespace Sales___Inventory_Log_In
             if (result != DialogResult.Yes)
                 return;
 
-            using (SqlConnection connection = database.GetConnection())
+            using (SqlConnection connection =
+                database.GetConnection())
             {
                 connection.Open();
 
@@ -849,12 +851,28 @@ namespace Sales___Inventory_Log_In
                         command.ExecuteNonQuery();
                     }
 
-                    string deleteQuery =
+                    string deleteItemsQuery =
+                        "DELETE FROM SaleItems WHERE SaleID = @SaleID";
+
+                    using (SqlCommand command =
+                        new SqlCommand(
+                            deleteItemsQuery,
+                            connection,
+                            transaction))
+                    {
+                        command.Parameters.AddWithValue(
+                            "@SaleID",
+                            selectedSaleID);
+
+                        command.ExecuteNonQuery();
+                    }
+
+                    string deleteSaleQuery =
                         "DELETE FROM Sales WHERE SaleID = @SaleID";
 
                     using (SqlCommand command =
                         new SqlCommand(
-                            deleteQuery,
+                            deleteSaleQuery,
                             connection,
                             transaction))
                     {
@@ -867,7 +885,12 @@ namespace Sales___Inventory_Log_In
 
                     transaction.Commit();
 
-                    MessageBox.Show("Sale deleted successfully.");
+                    MessageBox.Show(
+                        "Sale deleted successfully.",
+                        "Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
 
                     LoadCashierDashboard();
                 }
@@ -897,7 +920,11 @@ namespace Sales___Inventory_Log_In
             if (e.RowIndex < 0)
                 return;
 
-            DataGridViewRow row = dgvSales.Rows[e.RowIndex];
+            DataGridViewRow row =
+                dgvSales.Rows[e.RowIndex];
+
+            if (row.Cells["SaleID"].Value == null)
+                return;
 
             selectedSaleID =
                 Convert.ToInt32(row.Cells["SaleID"].Value);
@@ -942,11 +969,13 @@ namespace Sales___Inventory_Log_In
 
             txtUnitPrice.Text =
                 Convert.ToDecimal(
-                    row.Cells["UnitPrice"].Value).ToString("N2");
+                    row.Cells["UnitPrice"].Value
+                ).ToString("N2");
 
             txtTotalAmount.Text =
                 Convert.ToDecimal(
-                    row.Cells["Total"].Value).ToString("N2");
+                    row.Cells["Total"].Value
+                ).ToString("N2");
         }
 
         private void ClearSaleFields()
@@ -954,12 +983,20 @@ namespace Sales___Inventory_Log_In
             selectedSaleID = 0;
 
             txtInvoiceNo.Clear();
+
             cmbCustomer.SelectedIndex = -1;
+
             cmbProduct.SelectedIndex = -1;
+
             txtQuantity.Clear();
+
             txtUnitPrice.Clear();
+
             txtTotalAmount.Clear();
+        }
+
+        private void CashierForm_Load(object sender, EventArgs e)
+        {
         }
     }
 }
-
