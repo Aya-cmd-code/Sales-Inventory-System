@@ -60,6 +60,12 @@
     <Compile Include="LandingPage.Designer.cs">
       <DependentUpon>LandingPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Payment_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Payment_Form.Designer.cs">
+      <DependentUpon>Payment_Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProductManagement.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -79,6 +85,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="LandingPage.resx">
       <DependentUpon>LandingPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Payment_Form.resx">
+      <DependentUpon>Payment_Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProductManagement.resx">
       <DependentUpon>ProductManagement.cs</DependentUpon>
