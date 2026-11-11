@@ -48,6 +48,12 @@
   <ItemGroup>
     <Compile Include="AuthService.cs" />
     <Compile Include="DatabaseConnection.cs" />
+    <Compile Include="InventoryUpdate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InventoryUpdate.Designer.cs">
+      <DependentUpon>InventoryUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -80,6 +86,9 @@
     <Compile Include="SalesTransaction.Designer.cs">
       <DependentUpon>SalesTransaction.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="InventoryUpdate.resx">
+      <DependentUpon>InventoryUpdate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
