@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace Sales___Inventory_Log_In
 {
-    public partial class Product_Management : Form
+    public partial class LandingPage : Form
     {
-        public Product_Management()
+        public LandingPage()
         {
             InitializeComponent();
         }
