@@ -16,5 +16,10 @@ namespace Sales___Inventory_Log_In
         {
             InitializeComponent();
         }
+
+        private void InventoryUpdate_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -243,6 +243,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "InventoryUpdate";
             this.Text = "InventoryUpdate";
+            this.Load += new System.EventHandler(this.InventoryUpdate_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);

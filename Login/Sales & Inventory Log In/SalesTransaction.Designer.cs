@@ -263,7 +263,7 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(7, 18);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(556, 179);
+            this.dataGridView1.Size = new System.Drawing.Size(556, 186);
             this.dataGridView1.TabIndex = 9;
             // 
             // panel5
@@ -317,7 +317,7 @@
             this.button3.BackColor = System.Drawing.Color.LightSlateGray;
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.ForeColor = System.Drawing.Color.Navy;
-            this.button3.Location = new System.Drawing.Point(74, 203);
+            this.button3.Location = new System.Drawing.Point(72, 206);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(153, 33);
             this.button3.TabIndex = 17;
@@ -329,7 +329,7 @@
             this.button4.BackColor = System.Drawing.Color.LightSlateGray;
             this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button4.ForeColor = System.Drawing.Color.Navy;
-            this.button4.Location = new System.Drawing.Point(251, 203);
+            this.button4.Location = new System.Drawing.Point(251, 206);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(153, 33);
             this.button4.TabIndex = 18;
