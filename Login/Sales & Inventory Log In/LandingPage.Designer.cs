@@ -66,7 +66,7 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(145, -5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(732, 34);
+            this.panel1.Size = new System.Drawing.Size(752, 34);
             this.panel1.TabIndex = 15;
             // 
             // label1
@@ -244,14 +244,14 @@
             // 
             this.panel10.Location = new System.Drawing.Point(154, 35);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(714, 448);
+            this.panel10.Size = new System.Drawing.Size(731, 448);
             this.panel10.TabIndex = 17;
             // 
             // LandingPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(874, 481);
+            this.ClientSize = new System.Drawing.Size(890, 481);
             this.Controls.Add(this.panel10);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
