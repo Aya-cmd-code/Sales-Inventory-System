@@ -1,24 +1,22 @@
-﻿
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace Sales___Inventory_Log_In
 {
     public partial class LandingPage : Form
     {
-        private string currentRole;
+        private readonly string currentRole;
         private Form currentChildForm;
+        private bool isOpeningForm;
 
         public event EventHandler LogoutRequested;
 
         public LandingPage(string role)
         {
             InitializeComponent();
-
-            currentRole = role;
-
+            currentRole = role ?? string.Empty;
             lblWelcome.Text = "Welcome, " + currentRole;
-            
+
             lblProductManagement.Click += lblProductManagement_Click;
             lblSalesTransaction.Click += lblSalesTransaction_Click;
             lblPayment.Click += lblPayment_Click;
@@ -29,153 +27,136 @@ namespace Sales___Inventory_Log_In
             ApplyRolePermissions();
         }
 
-      
         private void OpenForm(Form childForm)
         {
-            if (currentChildForm != null)
+            if (childForm == null || IsDisposed || pnlMainContent.IsDisposed)
+                return;
+
+            try
             {
-                pnlMainContent.Controls.Remove(currentChildForm);
+                if (currentChildForm != null)
+                {
+                    pnlMainContent.Controls.Remove(currentChildForm);
+                    currentChildForm.Close();
+                    currentChildForm.Dispose();
+                    currentChildForm = null;
+                }
 
-                currentChildForm.Close();
-                currentChildForm.Dispose();
-
-                currentChildForm = null;
+                pnlMainContent.Controls.Clear();
+                currentChildForm = childForm;
+                childForm.TopLevel = false;
+                childForm.FormBorderStyle = FormBorderStyle.None;
+                childForm.Dock = DockStyle.Fill;
+                pnlMainContent.Controls.Add(childForm);
+                childForm.Show();
+                childForm.BringToFront();
             }
-
-            currentChildForm = childForm;
-
-            childForm.TopLevel = false;
-            childForm.FormBorderStyle = FormBorderStyle.None;
-            childForm.Dock = DockStyle.Fill;
-
-            pnlMainContent.Controls.Clear();
-            pnlMainContent.Controls.Add(childForm);
-
-            childForm.Show();
+            catch (Exception ex)
+            {
+                if (childForm != currentChildForm)
+                    childForm.Dispose();
+                MessageBox.Show("Unable to open this form.\n\n" + ex.Message, "Navigation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-      
+        private void ShowNavigationError(Exception ex)
+        {
+            MessageBox.Show("The selected page could not be opened. Check SQL Server and the required database tables.\n\n" + ex.Message, "Form Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         private void lblProductManagement_Click(object sender, EventArgs e)
         {
-            if (currentRole == "Admin" || currentRole == "Inventory")
-            {
-                OpenForm(new ProductManagement());
-            }
+            if (currentRole != "Admin" && currentRole != "Inventory") return;
+            try { OpenForm(new ProductManagement()); }
+            catch (Exception ex) { ShowNavigationError(ex); }
         }
 
         private void lblSalesTransaction_Click(object sender, EventArgs e)
         {
-            if (currentRole == "Admin" || currentRole == "Cashier")
+            if (currentRole != "Admin" && currentRole != "Cashier") return;
+            if (isOpeningForm) return;
+
+            try
             {
+                isOpeningForm = true;
                 SalesTransaction salesForm = new SalesTransaction();
-
-             
-                salesForm.PaymentRequested += (saleId) =>
+                salesForm.PaymentRequested += delegate (int saleId)
                 {
-                    OpenForm(new Payment_Form(saleId));
+                    if (IsDisposed || !IsHandleCreated) return;
+                    BeginInvoke((Action)delegate
+                    {
+                        if (!IsDisposed)
+                        {
+                            try { OpenForm(new Payment_Form(saleId)); }
+                            catch (Exception ex) { ShowNavigationError(ex); }
+                        }
+                    });
                 };
-
                 OpenForm(salesForm);
             }
+            catch (Exception ex)
+            {
+                ShowNavigationError(ex);
+            }
+            finally
+            {
+                isOpeningForm = false;
+            }
         }
 
- 
         private void lblPayment_Click(object sender, EventArgs e)
         {
-            if (currentRole == "Admin" || currentRole == "Cashier")
-            {
-                OpenForm(new Payment_Form());
-            }
+            if (currentRole != "Admin" && currentRole != "Cashier") return;
+            try { OpenForm(new Payment_Form()); }
+            catch (Exception ex) { ShowNavigationError(ex); }
         }
 
-      
         private void lblInventoryUpdate_Click(object sender, EventArgs e)
         {
-            if (currentRole == "Admin" || currentRole == "Inventory")
-            {
-                OpenForm(new InventoryUpdate());
-            }
+            if (currentRole != "Admin" && currentRole != "Inventory") return;
+            try { OpenForm(new InventoryUpdate()); }
+            catch (Exception ex) { ShowNavigationError(ex); }
         }
 
         private void lblReports_Click(object sender, EventArgs e)
         {
-            if (currentRole == "Admin")
-            {
-                OpenForm(new Reports_Form());
-            }
+            if (currentRole != "Admin") return;
+            try { OpenForm(new Reports_Form()); }
+            catch (Exception ex) { ShowNavigationError(ex); }
         }
 
-      
         private void lblLogout_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show(
-                "Are you sure you want to logout?",
-                "Confirm Logout",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
-
-            if (result == DialogResult.Yes)
-            {
+            if (MessageBox.Show("Are you sure you want to logout?", "Confirm Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 LogoutRequested?.Invoke(this, EventArgs.Empty);
-            }
         }
 
-       
         private void ApplyRolePermissions()
         {
-            if (currentRole == "Admin")
-            {
-               
-                lblProductManagement.Visible = true;
-                lblSalesTransaction.Visible = true;
-                lblPayment.Visible = true;
-                lblInventoryUpdate.Visible = true;
-                lblReports.Visible = true;
-            }
-            else if (currentRole == "Cashier")
-            {
-              
-                lblProductManagement.Visible = false;
-                lblSalesTransaction.Visible = true;
-                lblPayment.Visible = true;
-                lblInventoryUpdate.Visible = false;
-                lblReports.Visible = false;
-            }
-            else if (currentRole == "Inventory")
-            {
-           
-                lblProductManagement.Visible = true;
-                lblSalesTransaction.Visible = false;
-                lblPayment.Visible = false;
-                lblInventoryUpdate.Visible = true;
-                lblReports.Visible = false;
-            }
-            else
-            {
-                
-                lblProductManagement.Visible = false;
-                lblSalesTransaction.Visible = false;
-                lblPayment.Visible = false;
-                lblInventoryUpdate.Visible = false;
-                lblReports.Visible = false;
-            }
+            bool admin = currentRole == "Admin";
+            bool cashier = currentRole == "Cashier";
+            bool inventory = currentRole == "Inventory";
+
+            lblProductManagement.Visible = admin || inventory;
+            lblSalesTransaction.Visible = admin || cashier;
+            lblPayment.Visible = admin || cashier;
+            lblInventoryUpdate.Visible = admin || inventory;
+            lblReports.Visible = admin;
         }
 
         private void LandingPage_Load(object sender, EventArgs e)
         {
         }
 
-     
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             if (currentChildForm != null)
             {
+                pnlMainContent.Controls.Remove(currentChildForm);
                 currentChildForm.Close();
                 currentChildForm.Dispose();
                 currentChildForm = null;
             }
-
             base.OnFormClosed(e);
         }
     }
