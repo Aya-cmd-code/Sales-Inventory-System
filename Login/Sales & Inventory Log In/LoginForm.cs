@@ -6,38 +6,30 @@ namespace Sales___Inventory_Log_In
     public partial class LoginForm : Form
     {
         private readonly AuthService authService = new AuthService();
+        private bool openingLandingPage;
 
         public LoginForm()
         {
             InitializeComponent();
-
-            // Hide password characters
             txtPassword.UseSystemPasswordChar = true;
-            txtPassword.PasswordChar = '*';
-
             btnLogin.Click -= btnLogin_Click;
             btnLogin.Click += btnLogin_Click;
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            if (openingLandingPage)
+                return;
+
             string username = txtUsername.Text.Trim();
             string password = txtPassword.Text;
-
             string role = rbAdmin.Checked ? "Admin" :
                           rbCashier.Checked ? "Cashier" :
-                          rbInventory.Checked ? "Inventory" : "";
+                          rbInventory.Checked ? "Inventory" : string.Empty;
 
-            if (string.IsNullOrWhiteSpace(username) ||
-                string.IsNullOrWhiteSpace(password) ||
-                string.IsNullOrWhiteSpace(role))
+            if (username.Length == 0 || password.Length == 0 || role.Length == 0)
             {
-                MessageBox.Show(
-                    "Enter your username, password, and select your role.",
-                    "Missing Information",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                MessageBox.Show("Enter your username, password, and select your role.", "Missing Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -45,22 +37,23 @@ namespace Sales___Inventory_Log_In
             {
                 if (!authService.Login(username, password, role))
                 {
-                    MessageBox.Show(
-                        "Invalid username, password, or role.",
-                        "Login Failed",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
-                    );
+                    MessageBox.Show("Invalid username, password, or role.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-               LandingPage landing = new LandingPage(role);
-
-                landing.FormClosed += (s, args) =>
+                openingLandingPage = true;
+                LandingPage landing = new LandingPage(role);
+                landing.FormClosed += delegate
                 {
                     txtPassword.Clear();
                     txtUsername.Clear();
-                    Show();
+                    openingLandingPage = false;
+                    if (!IsDisposed)
+                        Show();
+                };
+                landing.LogoutRequested += delegate
+                {
+                    landing.Close();
                 };
 
                 Hide();
@@ -68,12 +61,8 @@ namespace Sales___Inventory_Log_In
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    "Unable to log in: " + ex.Message,
-                    "Database Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                openingLandingPage = false;
+                MessageBox.Show("Unable to log in. Check your database connection and Users table.\n\n" + ex.Message, "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
