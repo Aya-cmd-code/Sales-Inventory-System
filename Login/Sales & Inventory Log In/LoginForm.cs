@@ -1,107 +1,49 @@
-﻿using Sales_Inventory_Log_In;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Forms;
 
 namespace Sales___Inventory_Log_In
 {
+    public partial class LoginForm : Form
+    {
+        private readonly AuthService authService = new AuthService();
 
-        public partial class LoginForm : Form
+        public LoginForm()
         {
-            private AuthService authService;
-            private bool dashboardOpened = false;
+            InitializeComponent();
 
-            public LoginForm()
-            {
-                InitializeComponent();
+            // Hide password characters
+            txtPassword.UseSystemPasswordChar = true;
+            txtPassword.PasswordChar = '*';
 
-                authService = new AuthService();
+            btnLogin.Click -= btnLogin_Click;
+            btnLogin.Click += btnLogin_Click;
+        }
 
-                txtPassword.PasswordChar = '●';
-
-                rbAdmin.Checked = true;
-
-                btnLogin.Click -= btnLogin_Click;
-                btnLogin.Click += btnLogin_Click;
-            }
-
-            private void btnLogin_Click(object sender, EventArgs e)
-            {
-            if (dashboardOpened)
-                return;
-
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
             string username = txtUsername.Text.Trim();
             string password = txtPassword.Text;
 
-            string selectedRole = "";
+            string role = rbAdmin.Checked ? "Admin" :
+                          rbCashier.Checked ? "Cashier" :
+                          rbInventory.Checked ? "Inventory" : "";
 
-            if (rbAdmin.Checked)
-            {
-                selectedRole = "Admin";
-            }
-            else if (rbCashier.Checked)
-            {
-                selectedRole = "Cashier";
-            }
-            else if (rbInventory.Checked)
-            {
-                selectedRole = "Inventory";
-            }
-
-            if (string.IsNullOrWhiteSpace(username))
+            if (string.IsNullOrWhiteSpace(username) ||
+                string.IsNullOrWhiteSpace(password) ||
+                string.IsNullOrWhiteSpace(role))
             {
                 MessageBox.Show(
-                    "Please enter your username.",
-                    "Login",
+                    "Enter your username, password, and select your role.",
+                    "Missing Information",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning
                 );
-
-                txtUsername.Focus();
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                MessageBox.Show(
-                    "Please enter your password.",
-                    "Login",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-
-                txtPassword.Focus();
                 return;
             }
 
             try
             {
-                bool loginSuccessful = authService.Login(
-                    username,
-                    password,
-                    selectedRole
-                );
-
-                if (loginSuccessful)
-                {
-                    dashboardOpened = true;
-
-                    MessageBox.Show(
-                        "Login successful!",
-                        "Welcome",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information
-                    );
-
-                    OpenDashboard(selectedRole);
-                }
-                else
+                if (!authService.Login(username, password, role))
                 {
                     MessageBox.Show(
                         "Invalid username, password, or role.",
@@ -109,63 +51,30 @@ namespace Sales___Inventory_Log_In
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error
                     );
-
-                    txtPassword.Clear();
-                    txtPassword.Focus();
+                    return;
                 }
+
+               LandingPage landing = new LandingPage(role);
+
+                landing.FormClosed += (s, args) =>
+                {
+                    txtPassword.Clear();
+                    txtUsername.Clear();
+                    Show();
+                };
+
+                Hide();
+                landing.Show();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    "Database connection error:\n\n" + ex.Message,
+                    "Unable to log in: " + ex.Message,
                     "Database Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
                 );
             }
-        }
-
-        private void OpenDashboard(string role)
-        {
-            Form dashboard = null;
-
-            if (role == "Admin")
-            {
-                dashboard = new AdminForm();
-            }
-            else if (role == "Cashier")
-            {
-                dashboard = new CashierForm();
-            }
-            else if (role == "Inventory")
-            {
-                dashboard = new InventoryForm();
-            }
-
-            if (dashboard != null)
-            {
-                this.Hide();
-
-                dashboard.FormClosed += Dashboard_FormClosed;
-
-                dashboard.Show();
-            }
-            else
-            {
-                dashboardOpened = false;
-
-                MessageBox.Show(
-                    "Dashboard could not be opened.",
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
-            }
-        }
-
-        private void Dashboard_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            this.Close();
         }
     }
 }

@@ -1,49 +1,28 @@
-﻿
-using System;
+﻿using System;
 using System.Data.SqlClient;
 
 namespace Sales___Inventory_Log_In
 {
     public class AuthService
     {
-        private DatabaseConnection database =
-            new DatabaseConnection();
+        private readonly DatabaseConnection database = new DatabaseConnection();
 
-        public bool Login(
-            string username,
-            string password,
-            string role)
+        public bool Login(string username, string password, string role)
         {
-            using (SqlConnection connection =
-                database.GetConnection())
+            using (SqlConnection connection = database.GetConnection())
+            using (SqlCommand command = new SqlCommand(@"
+                SELECT COUNT(1)
+                FROM Users
+                WHERE Username = @Username
+                  AND [Password] = @Password
+                  AND Role = @Role
+                  AND (IsActive = 1 OR IsActive IS NULL);", connection))
             {
+                command.Parameters.AddWithValue("@Username", username.Trim());
+                command.Parameters.AddWithValue("@Password", password);
+                command.Parameters.AddWithValue("@Role", role);
                 connection.Open();
-
-                string query = @"
-                    SELECT COUNT(*)
-                    FROM Users
-                    WHERE Username = @Username
-                    AND [Password] = @Password
-                    AND Role = @Role";
-
-                using (SqlCommand command =
-                    new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue(
-                        "@Username", username);
-
-                    command.Parameters.AddWithValue(
-                        "@Password", password);
-
-                    command.Parameters.AddWithValue(
-                        "@Role", role);
-
-                    int result =
-                        Convert.ToInt32(
-                            command.ExecuteScalar());
-
-                    return result > 0;
-                }
+                return Convert.ToInt32(command.ExecuteScalar()) > 0;
             }
         }
     }

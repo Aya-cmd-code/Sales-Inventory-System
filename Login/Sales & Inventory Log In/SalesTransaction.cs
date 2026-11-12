@@ -11,6 +11,7 @@ namespace Sales___Inventory_Log_In
         private DatabaseConnection database = new DatabaseConnection();
         private DataTable cart = new DataTable();
 
+        public event Action<int> PaymentRequested;
         public SalesTransaction()
         {
             InitializeComponent();
@@ -166,6 +167,7 @@ namespace Sales___Inventory_Log_In
             UpdateTotal();
         }
 
+
         private void btnProceedToPayment_Click(object sender, EventArgs e)
         {
             if (cart.Rows.Count == 0)
@@ -177,6 +179,7 @@ namespace Sales___Inventory_Log_In
             if (string.IsNullOrWhiteSpace(txtCustomerName.Text))
             {
                 MessageBox.Show("Enter the customer name.");
+                txtCustomerName.Focus();
                 return;
             }
 
@@ -185,25 +188,34 @@ namespace Sales___Inventory_Log_In
             using (SqlConnection con = database.GetConnection())
             {
                 con.Open();
+
                 SqlTransaction trans = con.BeginTransaction();
 
                 try
                 {
                     string saleQuery = @"
-                        INSERT INTO Sales
-                        (InvoiceNumber, CustomerName, SaleDate,
-                         TotalAmount, PaymentStatus)
-                        VALUES
-                        (@Invoice, @Customer, @Date, @Total, 'Pending');
+                INSERT INTO Sales
+                (InvoiceNumber, CustomerName, SaleDate,
+                 TotalAmount, PaymentStatus)
+                VALUES
+                (@Invoice, @Customer, @Date, @Total, 'Pending');
 
-                        SELECT SCOPE_IDENTITY();";
+                SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
-                    using (SqlCommand cmd = new SqlCommand(saleQuery, con, trans))
+                    using (SqlCommand cmd =
+                        new SqlCommand(saleQuery, con, trans))
                     {
-                        cmd.Parameters.AddWithValue("@Invoice", txtInvoiceNumber.Text);
-                        cmd.Parameters.AddWithValue("@Customer", txtCustomerName.Text.Trim());
-                        cmd.Parameters.AddWithValue("@Date", dtpTransactionDate.Value);
-                        cmd.Parameters.AddWithValue("@Total", GetTotal());
+                        cmd.Parameters.AddWithValue(
+                            "@Invoice", txtInvoiceNumber.Text);
+
+                        cmd.Parameters.AddWithValue(
+                            "@Customer", txtCustomerName.Text.Trim());
+
+                        cmd.Parameters.AddWithValue(
+                            "@Date", dtpTransactionDate.Value);
+
+                        cmd.Parameters.AddWithValue(
+                            "@Total", GetTotal());
 
                         saleId = Convert.ToInt32(cmd.ExecuteScalar());
                     }
@@ -211,41 +223,58 @@ namespace Sales___Inventory_Log_In
                     foreach (DataRow row in cart.Rows)
                     {
                         string itemQuery = @"
-                            INSERT INTO SaleItems
-                            (SaleID, ProductID, Quantity, UnitPrice, Subtotal)
-                            VALUES (@SaleID, @ProductID, @Quantity, @Price, @Subtotal)";
+                    INSERT INTO SaleItems
+                    (SaleID, ProductID, Quantity, UnitPrice, Subtotal)
+                    VALUES
+                    (@SaleID, @ProductID, @Quantity, @Price, @Subtotal)";
 
-                        using (SqlCommand cmd = new SqlCommand(itemQuery, con, trans))
+                        using (SqlCommand cmd =
+                            new SqlCommand(itemQuery, con, trans))
                         {
                             cmd.Parameters.AddWithValue("@SaleID", saleId);
                             cmd.Parameters.AddWithValue("@ProductID", row["ProductID"]);
                             cmd.Parameters.AddWithValue("@Quantity", row["Quantity"]);
                             cmd.Parameters.AddWithValue("@Price", row["Price"]);
                             cmd.Parameters.AddWithValue("@Subtotal", row["Subtotal"]);
+
                             cmd.ExecuteNonQuery();
                         }
                     }
 
                     trans.Commit();
 
-                    MessageBox.Show("Sale saved. Continue to payment.");
-
-                   Payment_Form payment = new Payment_Form();
-                    payment.Show();
+                    MessageBox.Show(
+                        "Sale saved successfully. Proceed to payment."
+                    );
 
                     cart.Clear();
                     UpdateTotal();
                     txtCustomerName.Clear();
+
                     txtInvoiceNumber.Text =
-                        "INV-" + Guid.NewGuid().ToString("N").Substring(0, 8).ToUpper();
+                        "INV-" + Guid.NewGuid().ToString("N")
+                        .Substring(0, 8).ToUpper();
+
                     LoadProducts();
+
+                    // Open Payment only after the Sales form has reset.
+                    PaymentRequested?.Invoke(saleId);
                 }
                 catch (Exception ex)
                 {
                     trans.Rollback();
-                    MessageBox.Show("Unable to save sale: " + ex.Message);
+
+                    MessageBox.Show(
+                        "Unable to save sale: " + ex.Message
+                    );
                 }
             }
+        }
+       
+
+        private void SalesTransaction_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
