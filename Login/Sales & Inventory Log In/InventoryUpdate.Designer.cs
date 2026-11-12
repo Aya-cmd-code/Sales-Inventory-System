@@ -31,26 +31,26 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.btnUpdateStock = new System.Windows.Forms.Button();
+            this.nudQuantity = new System.Windows.Forms.NumericUpDown();
+            this.txtCurrentStock = new System.Windows.Forms.TextBox();
+            this.txtReason = new System.Windows.Forms.TextBox();
+            this.cmbAction = new System.Windows.Forms.ComboBox();
+            this.cmbProduct = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.label8 = new System.Windows.Forms.Label();
+            this.dgvInventoryLogs = new System.Windows.Forms.DataGridView();
             this.label7 = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudQuantity)).BeginInit();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvInventoryLogs)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -78,12 +78,12 @@
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.panel2.Controls.Add(this.label8);
-            this.panel2.Controls.Add(this.button2);
-            this.panel2.Controls.Add(this.numericUpDown1);
-            this.panel2.Controls.Add(this.textBox1);
-            this.panel2.Controls.Add(this.textBox2);
-            this.panel2.Controls.Add(this.comboBox2);
-            this.panel2.Controls.Add(this.comboBox1);
+            this.panel2.Controls.Add(this.btnUpdateStock);
+            this.panel2.Controls.Add(this.nudQuantity);
+            this.panel2.Controls.Add(this.txtCurrentStock);
+            this.panel2.Controls.Add(this.txtReason);
+            this.panel2.Controls.Add(this.cmbAction);
+            this.panel2.Controls.Add(this.cmbProduct);
             this.panel2.Controls.Add(this.label6);
             this.panel2.Controls.Add(this.label5);
             this.panel2.Controls.Add(this.label4);
@@ -94,56 +94,69 @@
             this.panel2.Size = new System.Drawing.Size(271, 365);
             this.panel2.TabIndex = 20;
             // 
-            // button2
+            // label8
             // 
-            this.button2.BackColor = System.Drawing.Color.Navy;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(49, 273);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(153, 36);
-            this.button2.TabIndex = 18;
-            this.button2.Text = "Update Stock";
-            this.button2.UseVisualStyleBackColor = false;
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.Navy;
+            this.label8.Location = new System.Drawing.Point(2, 0);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(103, 15);
+            this.label8.TabIndex = 22;
+            this.label8.Text = "Stock Overview";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // numericUpDown1
+            // btnUpdateStock
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(85, 172);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(171, 20);
-            this.numericUpDown1.TabIndex = 10;
+            this.btnUpdateStock.BackColor = System.Drawing.Color.Navy;
+            this.btnUpdateStock.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUpdateStock.ForeColor = System.Drawing.Color.White;
+            this.btnUpdateStock.Location = new System.Drawing.Point(49, 273);
+            this.btnUpdateStock.Name = "btnUpdateStock";
+            this.btnUpdateStock.Size = new System.Drawing.Size(153, 36);
+            this.btnUpdateStock.TabIndex = 18;
+            this.btnUpdateStock.Text = "Update Stock";
+            this.btnUpdateStock.UseVisualStyleBackColor = false;
             // 
-            // textBox1
+            // nudQuantity
             // 
-            this.textBox1.Location = new System.Drawing.Point(98, 77);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(158, 25);
-            this.textBox1.TabIndex = 9;
+            this.nudQuantity.Location = new System.Drawing.Point(85, 172);
+            this.nudQuantity.Name = "nudQuantity";
+            this.nudQuantity.Size = new System.Drawing.Size(171, 20);
+            this.nudQuantity.TabIndex = 10;
             // 
-            // textBox2
+            // txtCurrentStock
             // 
-            this.textBox2.Location = new System.Drawing.Point(85, 218);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(171, 25);
-            this.textBox2.TabIndex = 8;
+            this.txtCurrentStock.Location = new System.Drawing.Point(98, 77);
+            this.txtCurrentStock.Multiline = true;
+            this.txtCurrentStock.Name = "txtCurrentStock";
+            this.txtCurrentStock.Size = new System.Drawing.Size(158, 25);
+            this.txtCurrentStock.TabIndex = 9;
             // 
-            // comboBox2
+            // txtReason
             // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(85, 123);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(171, 21);
-            this.comboBox2.TabIndex = 7;
+            this.txtReason.Location = new System.Drawing.Point(85, 218);
+            this.txtReason.Multiline = true;
+            this.txtReason.Name = "txtReason";
+            this.txtReason.Size = new System.Drawing.Size(171, 25);
+            this.txtReason.TabIndex = 8;
             // 
-            // comboBox1
+            // cmbAction
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(85, 37);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(171, 21);
-            this.comboBox1.TabIndex = 5;
+            this.cmbAction.FormattingEnabled = true;
+            this.cmbAction.Location = new System.Drawing.Point(85, 123);
+            this.cmbAction.Name = "cmbAction";
+            this.cmbAction.Size = new System.Drawing.Size(171, 21);
+            this.cmbAction.TabIndex = 7;
+            // 
+            // cmbProduct
+            // 
+            this.cmbProduct.FormattingEnabled = true;
+            this.cmbProduct.Location = new System.Drawing.Point(85, 37);
+            this.cmbProduct.Name = "cmbProduct";
+            this.cmbProduct.Size = new System.Drawing.Size(171, 21);
+            this.cmbProduct.TabIndex = 5;
             // 
             // label6
             // 
@@ -193,25 +206,20 @@
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.panel3.Controls.Add(this.dataGridView1);
+            this.panel3.Controls.Add(this.dgvInventoryLogs);
             this.panel3.Controls.Add(this.label7);
             this.panel3.Location = new System.Drawing.Point(275, 40);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(435, 365);
             this.panel3.TabIndex = 21;
             // 
-            // label8
+            // dgvInventoryLogs
             // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.ForeColor = System.Drawing.Color.Navy;
-            this.label8.Location = new System.Drawing.Point(2, 0);
-            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(103, 15);
-            this.label8.TabIndex = 22;
-            this.label8.Text = "Stock Overview";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.dgvInventoryLogs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvInventoryLogs.Location = new System.Drawing.Point(5, 37);
+            this.dgvInventoryLogs.Name = "dgvInventoryLogs";
+            this.dgvInventoryLogs.Size = new System.Drawing.Size(423, 320);
+            this.dgvInventoryLogs.TabIndex = 24;
             // 
             // label7
             // 
@@ -224,14 +232,6 @@
             this.label7.Size = new System.Drawing.Size(148, 15);
             this.label7.TabIndex = 23;
             this.label7.Text = "Recent Inventory Logs";
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(5, 37);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(423, 320);
-            this.dataGridView1.TabIndex = 24;
             // 
             // InventoryUpdate
             // 
@@ -248,10 +248,10 @@
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudQuantity)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvInventoryLogs)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -267,14 +267,14 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.NumericUpDown nudQuantity;
+        private System.Windows.Forms.TextBox txtCurrentStock;
+        private System.Windows.Forms.TextBox txtReason;
+        private System.Windows.Forms.ComboBox cmbAction;
+        private System.Windows.Forms.ComboBox cmbProduct;
+        private System.Windows.Forms.Button btnUpdateStock;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvInventoryLogs;
     }
 }

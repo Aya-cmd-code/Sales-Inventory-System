@@ -16,5 +16,15 @@ namespace Sales___Inventory_Log_In
         {
             InitializeComponent();
         }
+
+        private void LandingPage_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

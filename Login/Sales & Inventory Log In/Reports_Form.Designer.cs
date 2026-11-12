@@ -31,31 +31,31 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.btnInventoryReport = new System.Windows.Forms.Button();
+            this.btnSalesReport = new System.Windows.Forms.Button();
+            this.dtpEndDate = new System.Windows.Forms.DateTimePicker();
+            this.dtpStartDate = new System.Windows.Forms.DateTimePicker();
             this.label3 = new System.Windows.Forms.Label();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.lblTotalSalesAmount = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.lblTotalProductsCount = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.btnCloseReport = new System.Windows.Forms.Button();
+            this.btnPrintReport = new System.Windows.Forms.Button();
+            this.btnGenerateReport = new System.Windows.Forms.Button();
+            this.dgvReportRecords = new System.Windows.Forms.DataGridView();
             this.label7 = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvReportRecords)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -82,10 +82,10 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.panel2.Controls.Add(this.button1);
-            this.panel2.Controls.Add(this.button2);
-            this.panel2.Controls.Add(this.dateTimePicker2);
-            this.panel2.Controls.Add(this.dateTimePicker1);
+            this.panel2.Controls.Add(this.btnInventoryReport);
+            this.panel2.Controls.Add(this.btnSalesReport);
+            this.panel2.Controls.Add(this.dtpEndDate);
+            this.panel2.Controls.Add(this.dtpStartDate);
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.label8);
@@ -94,16 +94,61 @@
             this.panel2.Size = new System.Drawing.Size(723, 76);
             this.panel2.TabIndex = 19;
             // 
-            // panel3
+            // btnInventoryReport
             // 
-            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.panel3.Controls.Add(this.label4);
-            this.panel3.Controls.Add(this.label10);
-            this.panel3.Location = new System.Drawing.Point(-3, 121);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(321, 65);
-            this.panel3.TabIndex = 20;
-            this.panel3.Paint += new System.Windows.Forms.PaintEventHandler(this.panel3_Paint);
+            this.btnInventoryReport.BackColor = System.Drawing.Color.Navy;
+            this.btnInventoryReport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnInventoryReport.ForeColor = System.Drawing.Color.White;
+            this.btnInventoryReport.Location = new System.Drawing.Point(570, 25);
+            this.btnInventoryReport.Name = "btnInventoryReport";
+            this.btnInventoryReport.Size = new System.Drawing.Size(135, 36);
+            this.btnInventoryReport.TabIndex = 20;
+            this.btnInventoryReport.Text = "Inventory Report";
+            this.btnInventoryReport.UseVisualStyleBackColor = false;
+            // 
+            // btnSalesReport
+            // 
+            this.btnSalesReport.BackColor = System.Drawing.Color.Navy;
+            this.btnSalesReport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSalesReport.ForeColor = System.Drawing.Color.White;
+            this.btnSalesReport.Location = new System.Drawing.Point(429, 25);
+            this.btnSalesReport.Name = "btnSalesReport";
+            this.btnSalesReport.Size = new System.Drawing.Size(135, 36);
+            this.btnSalesReport.TabIndex = 19;
+            this.btnSalesReport.Text = "Sales Report";
+            this.btnSalesReport.UseVisualStyleBackColor = false;
+            // 
+            // dtpEndDate
+            // 
+            this.dtpEndDate.Location = new System.Drawing.Point(219, 41);
+            this.dtpEndDate.Name = "dtpEndDate";
+            this.dtpEndDate.Size = new System.Drawing.Size(197, 20);
+            this.dtpEndDate.TabIndex = 17;
+            // 
+            // dtpStartDate
+            // 
+            this.dtpStartDate.Location = new System.Drawing.Point(17, 41);
+            this.dtpStartDate.Name = "dtpStartDate";
+            this.dtpStartDate.Size = new System.Drawing.Size(196, 20);
+            this.dtpStartDate.TabIndex = 16;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(216, 25);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(55, 13);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "End Date:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(14, 25);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "Start date:";
             // 
             // label8
             // 
@@ -117,61 +162,28 @@
             this.label8.TabIndex = 13;
             this.label8.Text = "Report Filter";
             // 
-            // label2
+            // panel3
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(14, 25);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 13);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "Start date:";
+            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.panel3.Controls.Add(this.lblTotalSalesAmount);
+            this.panel3.Controls.Add(this.label10);
+            this.panel3.Location = new System.Drawing.Point(-3, 121);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(321, 65);
+            this.panel3.TabIndex = 20;
+            this.panel3.Paint += new System.Windows.Forms.PaintEventHandler(this.panel3_Paint);
             // 
-            // label3
+            // lblTotalSalesAmount
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(216, 25);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(55, 13);
-            this.label3.TabIndex = 15;
-            this.label3.Text = "End Date:";
-            // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(17, 41);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(196, 20);
-            this.dateTimePicker1.TabIndex = 16;
-            // 
-            // dateTimePicker2
-            // 
-            this.dateTimePicker2.Location = new System.Drawing.Point(219, 41);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(197, 20);
-            this.dateTimePicker2.TabIndex = 17;
-            // 
-            // button2
-            // 
-            this.button2.BackColor = System.Drawing.Color.Navy;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(429, 25);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(135, 36);
-            this.button2.TabIndex = 19;
-            this.button2.Text = "Update Stock";
-            this.button2.UseVisualStyleBackColor = false;
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.Navy;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(570, 25);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(135, 36);
-            this.button1.TabIndex = 20;
-            this.button1.Text = "Update Stock";
-            this.button1.UseVisualStyleBackColor = false;
+            this.lblTotalSalesAmount.AutoSize = true;
+            this.lblTotalSalesAmount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalSalesAmount.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.lblTotalSalesAmount.Location = new System.Drawing.Point(106, 29);
+            this.lblTotalSalesAmount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblTotalSalesAmount.Name = "lblTotalSalesAmount";
+            this.lblTotalSalesAmount.Size = new System.Drawing.Size(63, 24);
+            this.lblTotalSalesAmount.TabIndex = 22;
+            this.lblTotalSalesAmount.Text = "₱0.00";
             // 
             // label10
             // 
@@ -185,27 +197,27 @@
             this.label10.TabIndex = 21;
             this.label10.Text = "Total Sales:";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.label4.Location = new System.Drawing.Point(106, 29);
-            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(63, 24);
-            this.label4.TabIndex = 22;
-            this.label4.Text = "₱0.00";
-            // 
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.panel4.Controls.Add(this.label6);
+            this.panel4.Controls.Add(this.lblTotalProductsCount);
             this.panel4.Controls.Add(this.label5);
             this.panel4.Location = new System.Drawing.Point(324, 121);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(396, 65);
             this.panel4.TabIndex = 21;
+            // 
+            // lblTotalProductsCount
+            // 
+            this.lblTotalProductsCount.AutoSize = true;
+            this.lblTotalProductsCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalProductsCount.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.lblTotalProductsCount.Location = new System.Drawing.Point(174, 29);
+            this.lblTotalProductsCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblTotalProductsCount.Name = "lblTotalProductsCount";
+            this.lblTotalProductsCount.Size = new System.Drawing.Size(21, 24);
+            this.lblTotalProductsCount.TabIndex = 23;
+            this.lblTotalProductsCount.Text = "0";
             // 
             // label5
             // 
@@ -219,30 +231,62 @@
             this.label5.TabIndex = 23;
             this.label5.Text = "Total Products in Stock:";
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.label6.Location = new System.Drawing.Point(174, 29);
-            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(21, 24);
-            this.label6.TabIndex = 23;
-            this.label6.Text = "0";
-            // 
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.panel5.Controls.Add(this.button5);
-            this.panel5.Controls.Add(this.button4);
-            this.panel5.Controls.Add(this.button3);
-            this.panel5.Controls.Add(this.dataGridView1);
+            this.panel5.Controls.Add(this.btnCloseReport);
+            this.panel5.Controls.Add(this.btnPrintReport);
+            this.panel5.Controls.Add(this.btnGenerateReport);
+            this.panel5.Controls.Add(this.dgvReportRecords);
             this.panel5.Controls.Add(this.label7);
             this.panel5.Location = new System.Drawing.Point(-3, 192);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(723, 222);
             this.panel5.TabIndex = 22;
+            // 
+            // btnCloseReport
+            // 
+            this.btnCloseReport.BackColor = System.Drawing.Color.Navy;
+            this.btnCloseReport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCloseReport.ForeColor = System.Drawing.Color.White;
+            this.btnCloseReport.Location = new System.Drawing.Point(592, 187);
+            this.btnCloseReport.Name = "btnCloseReport";
+            this.btnCloseReport.Size = new System.Drawing.Size(113, 32);
+            this.btnCloseReport.TabIndex = 25;
+            this.btnCloseReport.Text = "Close";
+            this.btnCloseReport.UseVisualStyleBackColor = false;
+            // 
+            // btnPrintReport
+            // 
+            this.btnPrintReport.BackColor = System.Drawing.Color.Navy;
+            this.btnPrintReport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrintReport.ForeColor = System.Drawing.Color.White;
+            this.btnPrintReport.Location = new System.Drawing.Point(158, 187);
+            this.btnPrintReport.Name = "btnPrintReport";
+            this.btnPrintReport.Size = new System.Drawing.Size(113, 32);
+            this.btnPrintReport.TabIndex = 24;
+            this.btnPrintReport.Text = "Print";
+            this.btnPrintReport.UseVisualStyleBackColor = false;
+            // 
+            // btnGenerateReport
+            // 
+            this.btnGenerateReport.BackColor = System.Drawing.Color.Navy;
+            this.btnGenerateReport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGenerateReport.ForeColor = System.Drawing.Color.White;
+            this.btnGenerateReport.Location = new System.Drawing.Point(31, 187);
+            this.btnGenerateReport.Name = "btnGenerateReport";
+            this.btnGenerateReport.Size = new System.Drawing.Size(116, 32);
+            this.btnGenerateReport.TabIndex = 23;
+            this.btnGenerateReport.Text = "Generate";
+            this.btnGenerateReport.UseVisualStyleBackColor = false;
+            // 
+            // dgvReportRecords
+            // 
+            this.dgvReportRecords.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvReportRecords.Location = new System.Drawing.Point(5, 15);
+            this.dgvReportRecords.Name = "dgvReportRecords";
+            this.dgvReportRecords.Size = new System.Drawing.Size(718, 169);
+            this.dgvReportRecords.TabIndex = 22;
             // 
             // label7
             // 
@@ -255,50 +299,6 @@
             this.label7.Size = new System.Drawing.Size(107, 15);
             this.label7.TabIndex = 21;
             this.label7.Text = "Report Records";
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(5, 15);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(718, 169);
-            this.dataGridView1.TabIndex = 22;
-            // 
-            // button3
-            // 
-            this.button3.BackColor = System.Drawing.Color.Navy;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.Color.White;
-            this.button3.Location = new System.Drawing.Point(31, 187);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(116, 32);
-            this.button3.TabIndex = 23;
-            this.button3.Text = "Generate";
-            this.button3.UseVisualStyleBackColor = false;
-            // 
-            // button4
-            // 
-            this.button4.BackColor = System.Drawing.Color.Navy;
-            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.ForeColor = System.Drawing.Color.White;
-            this.button4.Location = new System.Drawing.Point(158, 187);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(113, 32);
-            this.button4.TabIndex = 24;
-            this.button4.Text = "Print";
-            this.button4.UseVisualStyleBackColor = false;
-            // 
-            // button5
-            // 
-            this.button5.BackColor = System.Drawing.Color.Navy;
-            this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.ForeColor = System.Drawing.Color.White;
-            this.button5.Location = new System.Drawing.Point(592, 187);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(113, 32);
-            this.button5.TabIndex = 25;
-            this.button5.Text = "Close";
-            this.button5.UseVisualStyleBackColor = false;
             // 
             // Reports_Form
             // 
@@ -322,7 +322,7 @@
             this.panel4.PerformLayout();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvReportRecords)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -336,20 +336,20 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.DateTimePicker dateTimePicker2;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.DateTimePicker dtpEndDate;
+        private System.Windows.Forms.DateTimePicker dtpStartDate;
+        private System.Windows.Forms.Button btnInventoryReport;
+        private System.Windows.Forms.Button btnSalesReport;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblTotalSalesAmount;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblTotalProductsCount;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvReportRecords;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnCloseReport;
+        private System.Windows.Forms.Button btnPrintReport;
+        private System.Windows.Forms.Button btnGenerateReport;
     }
 }

@@ -31,36 +31,36 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.dtpTransactionDate = new System.Windows.Forms.DateTimePicker();
+            this.txtCustomerName = new System.Windows.Forms.TextBox();
+            this.txtInvoiceNumber = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.btnAddToCart = new System.Windows.Forms.Button();
+            this.nudQuantity = new System.Windows.Forms.NumericUpDown();
+            this.cmbProduct = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnClearCart = new System.Windows.Forms.Button();
+            this.btnRemoveCartItem = new System.Windows.Forms.Button();
+            this.btnProceedToPayment = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.label11 = new System.Windows.Forms.Label();
+            this.lblTotalAmount = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dgvCartItems = new System.Windows.Forms.DataGridView();
             this.label9 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudQuantity)).BeginInit();
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCartItems)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -87,9 +87,9 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.panel2.Controls.Add(this.dateTimePicker1);
-            this.panel2.Controls.Add(this.textBox2);
-            this.panel2.Controls.Add(this.textBox1);
+            this.panel2.Controls.Add(this.dtpTransactionDate);
+            this.panel2.Controls.Add(this.txtCustomerName);
+            this.panel2.Controls.Add(this.txtInvoiceNumber);
             this.panel2.Controls.Add(this.label6);
             this.panel2.Controls.Add(this.label5);
             this.panel2.Controls.Add(this.label4);
@@ -99,28 +99,28 @@
             this.panel2.Size = new System.Drawing.Size(344, 124);
             this.panel2.TabIndex = 18;
             // 
-            // dateTimePicker1
+            // dtpTransactionDate
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(99, 60);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(201, 20);
-            this.dateTimePicker1.TabIndex = 7;
+            this.dtpTransactionDate.Location = new System.Drawing.Point(99, 60);
+            this.dtpTransactionDate.Name = "dtpTransactionDate";
+            this.dtpTransactionDate.Size = new System.Drawing.Size(201, 20);
+            this.dtpTransactionDate.TabIndex = 7;
             // 
-            // textBox2
+            // txtCustomerName
             // 
-            this.textBox2.Location = new System.Drawing.Point(99, 88);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(201, 24);
-            this.textBox2.TabIndex = 6;
+            this.txtCustomerName.Location = new System.Drawing.Point(99, 88);
+            this.txtCustomerName.Multiline = true;
+            this.txtCustomerName.Name = "txtCustomerName";
+            this.txtCustomerName.Size = new System.Drawing.Size(201, 24);
+            this.txtCustomerName.TabIndex = 6;
             // 
-            // textBox1
+            // txtInvoiceNumber
             // 
-            this.textBox1.Location = new System.Drawing.Point(99, 26);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(201, 24);
-            this.textBox1.TabIndex = 5;
+            this.txtInvoiceNumber.Location = new System.Drawing.Point(99, 26);
+            this.txtInvoiceNumber.Multiline = true;
+            this.txtInvoiceNumber.Name = "txtInvoiceNumber";
+            this.txtInvoiceNumber.Size = new System.Drawing.Size(201, 24);
+            this.txtInvoiceNumber.TabIndex = 5;
             // 
             // label6
             // 
@@ -164,9 +164,9 @@
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.panel3.Controls.Add(this.button2);
-            this.panel3.Controls.Add(this.numericUpDown1);
-            this.panel3.Controls.Add(this.comboBox1);
+            this.panel3.Controls.Add(this.btnAddToCart);
+            this.panel3.Controls.Add(this.nudQuantity);
+            this.panel3.Controls.Add(this.cmbProduct);
             this.panel3.Controls.Add(this.label8);
             this.panel3.Controls.Add(this.label7);
             this.panel3.Controls.Add(this.label3);
@@ -175,32 +175,32 @@
             this.panel3.Size = new System.Drawing.Size(344, 124);
             this.panel3.TabIndex = 19;
             // 
-            // button2
+            // btnAddToCart
             // 
-            this.button2.BackColor = System.Drawing.Color.Navy;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(84, 86);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(153, 33);
-            this.button2.TabIndex = 16;
-            this.button2.Text = "Add to Cart";
-            this.button2.UseVisualStyleBackColor = false;
+            this.btnAddToCart.BackColor = System.Drawing.Color.Navy;
+            this.btnAddToCart.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddToCart.ForeColor = System.Drawing.Color.White;
+            this.btnAddToCart.Location = new System.Drawing.Point(84, 86);
+            this.btnAddToCart.Name = "btnAddToCart";
+            this.btnAddToCart.Size = new System.Drawing.Size(153, 33);
+            this.btnAddToCart.TabIndex = 16;
+            this.btnAddToCart.Text = "Add to Cart";
+            this.btnAddToCart.UseVisualStyleBackColor = false;
             // 
-            // numericUpDown1
+            // nudQuantity
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(56, 60);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(153, 20);
-            this.numericUpDown1.TabIndex = 8;
+            this.nudQuantity.Location = new System.Drawing.Point(56, 60);
+            this.nudQuantity.Name = "nudQuantity";
+            this.nudQuantity.Size = new System.Drawing.Size(153, 20);
+            this.nudQuantity.TabIndex = 8;
             // 
-            // comboBox1
+            // cmbProduct
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(56, 26);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(215, 21);
-            this.comboBox1.TabIndex = 7;
+            this.cmbProduct.FormattingEnabled = true;
+            this.cmbProduct.Location = new System.Drawing.Point(56, 26);
+            this.cmbProduct.Name = "cmbProduct";
+            this.cmbProduct.Size = new System.Drawing.Size(215, 21);
+            this.cmbProduct.TabIndex = 7;
             // 
             // label8
             // 
@@ -235,74 +235,74 @@
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.panel4.Controls.Add(this.button4);
-            this.panel4.Controls.Add(this.button3);
-            this.panel4.Controls.Add(this.button1);
+            this.panel4.Controls.Add(this.btnClearCart);
+            this.panel4.Controls.Add(this.btnRemoveCartItem);
+            this.panel4.Controls.Add(this.btnProceedToPayment);
             this.panel4.Controls.Add(this.panel5);
-            this.panel4.Controls.Add(this.dataGridView1);
+            this.panel4.Controls.Add(this.dgvCartItems);
             this.panel4.Controls.Add(this.label9);
             this.panel4.Location = new System.Drawing.Point(5, 170);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(713, 239);
             this.panel4.TabIndex = 20;
             // 
-            // button4
+            // btnClearCart
             // 
-            this.button4.BackColor = System.Drawing.Color.LightSlateGray;
-            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.ForeColor = System.Drawing.Color.Navy;
-            this.button4.Location = new System.Drawing.Point(251, 206);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(153, 33);
-            this.button4.TabIndex = 18;
-            this.button4.Text = "Clear Cart";
-            this.button4.UseVisualStyleBackColor = false;
+            this.btnClearCart.BackColor = System.Drawing.Color.LightSlateGray;
+            this.btnClearCart.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClearCart.ForeColor = System.Drawing.Color.Navy;
+            this.btnClearCart.Location = new System.Drawing.Point(251, 206);
+            this.btnClearCart.Name = "btnClearCart";
+            this.btnClearCart.Size = new System.Drawing.Size(153, 33);
+            this.btnClearCart.TabIndex = 18;
+            this.btnClearCart.Text = "Clear Cart";
+            this.btnClearCart.UseVisualStyleBackColor = false;
             // 
-            // button3
+            // btnRemoveCartItem
             // 
-            this.button3.BackColor = System.Drawing.Color.LightSlateGray;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.Color.Navy;
-            this.button3.Location = new System.Drawing.Point(72, 206);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(153, 33);
-            this.button3.TabIndex = 17;
-            this.button3.Text = "Remove Item";
-            this.button3.UseVisualStyleBackColor = false;
+            this.btnRemoveCartItem.BackColor = System.Drawing.Color.LightSlateGray;
+            this.btnRemoveCartItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRemoveCartItem.ForeColor = System.Drawing.Color.Navy;
+            this.btnRemoveCartItem.Location = new System.Drawing.Point(72, 206);
+            this.btnRemoveCartItem.Name = "btnRemoveCartItem";
+            this.btnRemoveCartItem.Size = new System.Drawing.Size(153, 33);
+            this.btnRemoveCartItem.TabIndex = 17;
+            this.btnRemoveCartItem.Text = "Remove Item";
+            this.btnRemoveCartItem.UseVisualStyleBackColor = false;
             // 
-            // button1
+            // btnProceedToPayment
             // 
-            this.button1.BackColor = System.Drawing.Color.Navy;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(517, 203);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(181, 33);
-            this.button1.TabIndex = 17;
-            this.button1.Text = "Proceed to Payment";
-            this.button1.UseVisualStyleBackColor = false;
+            this.btnProceedToPayment.BackColor = System.Drawing.Color.Navy;
+            this.btnProceedToPayment.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnProceedToPayment.ForeColor = System.Drawing.Color.White;
+            this.btnProceedToPayment.Location = new System.Drawing.Point(517, 203);
+            this.btnProceedToPayment.Name = "btnProceedToPayment";
+            this.btnProceedToPayment.Size = new System.Drawing.Size(181, 33);
+            this.btnProceedToPayment.TabIndex = 17;
+            this.btnProceedToPayment.Text = "Proceed to Payment";
+            this.btnProceedToPayment.UseVisualStyleBackColor = false;
             // 
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.panel5.Controls.Add(this.label11);
+            this.panel5.Controls.Add(this.lblTotalAmount);
             this.panel5.Controls.Add(this.label10);
             this.panel5.Location = new System.Drawing.Point(569, 43);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(141, 135);
             this.panel5.TabIndex = 10;
             // 
-            // label11
+            // lblTotalAmount
             // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.ForeColor = System.Drawing.Color.Blue;
-            this.label11.Location = new System.Drawing.Point(45, 59);
-            this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(51, 18);
-            this.label11.TabIndex = 11;
-            this.label11.Text = "₱0.00";
+            this.lblTotalAmount.AutoSize = true;
+            this.lblTotalAmount.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalAmount.ForeColor = System.Drawing.Color.Blue;
+            this.lblTotalAmount.Location = new System.Drawing.Point(45, 59);
+            this.lblTotalAmount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblTotalAmount.Name = "lblTotalAmount";
+            this.lblTotalAmount.Size = new System.Drawing.Size(51, 18);
+            this.lblTotalAmount.TabIndex = 11;
+            this.lblTotalAmount.Text = "₱0.00";
             // 
             // label10
             // 
@@ -316,13 +316,13 @@
             this.label10.TabIndex = 11;
             this.label10.Text = "Total:";
             // 
-            // dataGridView1
+            // dgvCartItems
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(7, 18);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(556, 186);
-            this.dataGridView1.TabIndex = 9;
+            this.dgvCartItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvCartItems.Location = new System.Drawing.Point(7, 18);
+            this.dgvCartItems.Name = "dgvCartItems";
+            this.dgvCartItems.Size = new System.Drawing.Size(556, 186);
+            this.dgvCartItems.TabIndex = 9;
             // 
             // label9
             // 
@@ -353,12 +353,12 @@
             this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudQuantity)).EndInit();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCartItems)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -374,22 +374,22 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.DateTimePicker dtpTransactionDate;
+        private System.Windows.Forms.TextBox txtCustomerName;
+        private System.Windows.Forms.TextBox txtInvoiceNumber;
+        private System.Windows.Forms.ComboBox cmbProduct;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.NumericUpDown nudQuantity;
+        private System.Windows.Forms.Button btnAddToCart;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lblTotalAmount;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvCartItems;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnClearCart;
+        private System.Windows.Forms.Button btnRemoveCartItem;
+        private System.Windows.Forms.Button btnProceedToPayment;
     }
 }
