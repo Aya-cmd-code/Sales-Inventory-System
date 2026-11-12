@@ -222,5 +222,10 @@ namespace Sales___Inventory_Log_In
             cmbProductStatus.SelectedIndex = -1;
             dgvProducts.ClearSelection();
         }
+
+        private void ProductManagement_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

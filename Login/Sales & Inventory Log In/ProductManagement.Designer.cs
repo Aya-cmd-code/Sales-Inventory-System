@@ -359,7 +359,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "ProductManagement";
             this.Text = "ProductManagement";
-     
+            this.Load += new System.EventHandler(this.ProductManagement_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
