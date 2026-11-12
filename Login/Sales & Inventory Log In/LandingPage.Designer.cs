@@ -43,7 +43,7 @@
             this.pnlSalesMenu = new System.Windows.Forms.Panel();
             this.lblSalesTransaction = new System.Windows.Forms.Label();
             this.pnlProductMenu = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lblProductManagement = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pnlMainContent = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
@@ -191,22 +191,22 @@
             // 
             // pnlProductMenu
             // 
-            this.pnlProductMenu.Controls.Add(this.label3);
+            this.pnlProductMenu.Controls.Add(this.lblProductManagement);
             this.pnlProductMenu.Location = new System.Drawing.Point(0, 164);
             this.pnlProductMenu.Name = "pnlProductMenu";
             this.pnlProductMenu.Size = new System.Drawing.Size(150, 36);
             this.pnlProductMenu.TabIndex = 6;
             // 
-            // label3
+            // lblProductManagement
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.Navy;
-            this.label3.Location = new System.Drawing.Point(14, 13);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(127, 13);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Product Management";
+            this.lblProductManagement.AutoSize = true;
+            this.lblProductManagement.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblProductManagement.ForeColor = System.Drawing.Color.Navy;
+            this.lblProductManagement.Location = new System.Drawing.Point(14, 13);
+            this.lblProductManagement.Name = "lblProductManagement";
+            this.lblProductManagement.Size = new System.Drawing.Size(127, 13);
+            this.lblProductManagement.TabIndex = 4;
+            this.lblProductManagement.Text = "Product Management";
             // 
             // pictureBox1
             // 
@@ -268,7 +268,7 @@
         private System.Windows.Forms.Panel pnlSalesMenu;
         private System.Windows.Forms.Label lblSalesTransaction;
         private System.Windows.Forms.Panel pnlProductMenu;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblProductManagement;
         private System.Windows.Forms.Panel pnlLogoutMenu;
         private System.Windows.Forms.Label lblLogout;
         private System.Windows.Forms.Label lblReports;
