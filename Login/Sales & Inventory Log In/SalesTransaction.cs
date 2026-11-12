@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
@@ -8,18 +7,20 @@ namespace Sales___Inventory_Log_In
 {
     public partial class SalesTransaction : Form
     {
-        private DatabaseConnection database = new DatabaseConnection();
-        private DataTable cart = new DataTable();
+        private readonly DatabaseConnection database = new DatabaseConnection();
+        private readonly DataTable cart = new DataTable();
+        private bool paymentRequested;
 
         public event Action<int> PaymentRequested;
+
         public SalesTransaction()
         {
             InitializeComponent();
-
             txtInvoiceNumber.ReadOnly = true;
-            txtInvoiceNumber.Text = "INV-" + Guid.NewGuid().ToString("N").Substring(0, 8).ToUpper();
-
+            txtInvoiceNumber.Text = CreateInvoiceNumber();
+            dtpTransactionDate.Value = DateTime.Now;
             nudQuantity.Minimum = 1;
+            nudQuantity.Maximum = 9999;
             nudQuantity.Value = 1;
 
             cart.Columns.Add("ProductID", typeof(int));
@@ -33,6 +34,7 @@ namespace Sales___Inventory_Log_In
             dgvCartItems.AllowUserToAddRows = false;
             dgvCartItems.ReadOnly = true;
             dgvCartItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvCartItems.MultiSelect = false;
             dgvCartItems.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvCartItems.Columns["ProductID"].Visible = false;
             dgvCartItems.Columns["AvailableStock"].Visible = false;
@@ -46,25 +48,35 @@ namespace Sales___Inventory_Log_In
             UpdateTotal();
         }
 
+        private string CreateInvoiceNumber()
+        {
+            return "INV-" + Guid.NewGuid().ToString("N").Substring(0, 8).ToUpperInvariant();
+        }
+
         private void LoadProducts()
         {
-            using (SqlConnection con = database.GetConnection())
+            try
             {
-                string query = @"
+                using (SqlConnection con = database.GetConnection())
+                using (SqlDataAdapter adapter = new SqlDataAdapter(@"
                     SELECT ProductID, ProductName, Price, StockQuantity
                     FROM Products
-                    WHERE IsActive = 1 AND Status <> 'Out of Stock'
-                    AND StockQuantity > 0
-                    ORDER BY ProductName";
-
-                SqlDataAdapter adapter = new SqlDataAdapter(query, con);
-                DataTable table = new DataTable();
-                adapter.Fill(table);
-
-                cmbProduct.DataSource = table;
-                cmbProduct.DisplayMember = "ProductName";
-                cmbProduct.ValueMember = "ProductID";
-                cmbProduct.SelectedIndex = -1;
+                    WHERE IsActive = 1 AND StockQuantity > 0
+                    ORDER BY ProductName;", con))
+                {
+                    DataTable table = new DataTable();
+                    adapter.Fill(table);
+                    cmbProduct.DataSource = null;
+                    cmbProduct.DisplayMember = "ProductName";
+                    cmbProduct.ValueMember = "ProductID";
+                    cmbProduct.DataSource = table;
+                    cmbProduct.SelectedIndex = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                cmbProduct.DataSource = null;
+                MessageBox.Show("Products could not be loaded. Verify that SQL Server is running and the Products table exists.\n\n" + ex.Message, "Product Loading Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -75,7 +87,6 @@ namespace Sales___Inventory_Log_In
                 MessageBox.Show("Please select a product.");
                 return;
             }
-
             if (string.IsNullOrWhiteSpace(txtCustomerName.Text))
             {
                 MessageBox.Show("Enter the customer name first.");
@@ -86,42 +97,36 @@ namespace Sales___Inventory_Log_In
             DataRowView selected = cmbProduct.SelectedItem as DataRowView;
             if (selected == null) return;
 
-            int id = Convert.ToInt32(selected["ProductID"]);
-            string name = selected["ProductName"].ToString();
+            int productId = Convert.ToInt32(selected["ProductID"]);
+            string productName = Convert.ToString(selected["ProductName"]);
             decimal price = Convert.ToDecimal(selected["Price"]);
             int stock = Convert.ToInt32(selected["StockQuantity"]);
             int quantity = Convert.ToInt32(nudQuantity.Value);
-
             DataRow existing = null;
 
             foreach (DataRow row in cart.Rows)
             {
-                if (Convert.ToInt32(row["ProductID"]) == id)
+                if (Convert.ToInt32(row["ProductID"]) == productId)
                 {
                     existing = row;
                     break;
                 }
             }
 
-            int oldQuantity = existing == null
-                ? 0 : Convert.ToInt32(existing["Quantity"]);
-
-            if (oldQuantity + quantity > stock)
+            int currentQuantity = existing == null ? 0 : Convert.ToInt32(existing["Quantity"]);
+            if (currentQuantity + quantity > stock)
             {
-                MessageBox.Show("The quantity exceeds the available stock.");
+                MessageBox.Show("The requested quantity exceeds the available stock.");
                 return;
             }
 
             if (existing == null)
-            {
-                cart.Rows.Add(id, name, price, quantity,
-                    price * quantity, stock);
-            }
+                cart.Rows.Add(productId, productName, price, quantity, price * quantity, stock);
             else
             {
-                int newQuantity = oldQuantity + quantity;
-                existing["Quantity"] = newQuantity;
-                existing["Subtotal"] = price * newQuantity;
+                int updatedQuantity = currentQuantity + quantity;
+                existing["Quantity"] = updatedQuantity;
+                existing["Subtotal"] = price * updatedQuantity;
             }
 
             UpdateTotal();
@@ -130,11 +135,9 @@ namespace Sales___Inventory_Log_In
 
         private decimal GetTotal()
         {
-            decimal total = 0;
-
+            decimal total = 0m;
             foreach (DataRow row in cart.Rows)
                 total += Convert.ToDecimal(row["Subtotal"]);
-
             return total;
         }
 
@@ -145,37 +148,38 @@ namespace Sales___Inventory_Log_In
 
         private void btnRemoveCartItem_Click(object sender, EventArgs e)
         {
-            if (dgvCartItems.CurrentRow == null ||
-                dgvCartItems.CurrentRow.Index < 0)
+            if (dgvCartItems.CurrentRow == null || dgvCartItems.CurrentRow.IsNewRow)
             {
                 MessageBox.Show("Select an item to remove.");
                 return;
             }
 
-            int index = dgvCartItems.CurrentRow.Index;
-
-            if (index < cart.Rows.Count)
+            DataRowView selected = dgvCartItems.CurrentRow.DataBoundItem as DataRowView;
+            if (selected != null)
             {
-                cart.Rows.RemoveAt(index);
+                cart.Rows.Remove(selected.Row);
                 UpdateTotal();
             }
         }
 
         private void btnClearCart_Click(object sender, EventArgs e)
         {
-            cart.Clear();
-            UpdateTotal();
+            if (cart.Rows.Count == 0) return;
+            if (MessageBox.Show("Clear all items from this cart?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                cart.Clear();
+                UpdateTotal();
+            }
         }
-
 
         private void btnProceedToPayment_Click(object sender, EventArgs e)
         {
+            if (paymentRequested) return;
             if (cart.Rows.Count == 0)
             {
                 MessageBox.Show("Your cart is empty.");
                 return;
             }
-
             if (string.IsNullOrWhiteSpace(txtCustomerName.Text))
             {
                 MessageBox.Show("Enter the customer name.");
@@ -184,97 +188,61 @@ namespace Sales___Inventory_Log_In
             }
 
             int saleId = 0;
-
             using (SqlConnection con = database.GetConnection())
             {
                 con.Open();
-
-                SqlTransaction trans = con.BeginTransaction();
-
-                try
+                using (SqlTransaction transaction = con.BeginTransaction())
                 {
-                    string saleQuery = @"
-                INSERT INTO Sales
-                (InvoiceNumber, CustomerName, SaleDate,
-                 TotalAmount, PaymentStatus)
-                VALUES
-                (@Invoice, @Customer, @Date, @Total, 'Pending');
-
-                SELECT CAST(SCOPE_IDENTITY() AS INT);";
-
-                    using (SqlCommand cmd =
-                        new SqlCommand(saleQuery, con, trans))
+                    try
                     {
-                        cmd.Parameters.AddWithValue(
-                            "@Invoice", txtInvoiceNumber.Text);
-
-                        cmd.Parameters.AddWithValue(
-                            "@Customer", txtCustomerName.Text.Trim());
-
-                        cmd.Parameters.AddWithValue(
-                            "@Date", dtpTransactionDate.Value);
-
-                        cmd.Parameters.AddWithValue(
-                            "@Total", GetTotal());
-
-                        saleId = Convert.ToInt32(cmd.ExecuteScalar());
-                    }
-
-                    foreach (DataRow row in cart.Rows)
-                    {
-                        string itemQuery = @"
-                    INSERT INTO SaleItems
-                    (SaleID, ProductID, Quantity, UnitPrice, Subtotal)
-                    VALUES
-                    (@SaleID, @ProductID, @Quantity, @Price, @Subtotal)";
-
-                        using (SqlCommand cmd =
-                            new SqlCommand(itemQuery, con, trans))
+                        using (SqlCommand command = new SqlCommand(@"
+                            INSERT INTO Sales
+                            (InvoiceNumber, CustomerName, SaleDate, TotalAmount, PaymentStatus, StockDeducted)
+                            VALUES (@Invoice, @Customer, @SaleDate, @Total, 'Pending', 0);
+                            SELECT CAST(SCOPE_IDENTITY() AS INT);", con, transaction))
                         {
-                            cmd.Parameters.AddWithValue("@SaleID", saleId);
-                            cmd.Parameters.AddWithValue("@ProductID", row["ProductID"]);
-                            cmd.Parameters.AddWithValue("@Quantity", row["Quantity"]);
-                            cmd.Parameters.AddWithValue("@Price", row["Price"]);
-                            cmd.Parameters.AddWithValue("@Subtotal", row["Subtotal"]);
-
-                            cmd.ExecuteNonQuery();
+                            command.Parameters.Add("@Invoice", SqlDbType.VarChar, 30).Value = txtInvoiceNumber.Text;
+                            command.Parameters.Add("@Customer", SqlDbType.NVarChar, 150).Value = txtCustomerName.Text.Trim();
+                            command.Parameters.Add("@SaleDate", SqlDbType.DateTime).Value = dtpTransactionDate.Value;
+                            command.Parameters.Add("@Total", SqlDbType.Decimal).Value = GetTotal();
+                            command.Parameters["@Total"].Precision = 18;
+                            command.Parameters["@Total"].Scale = 2;
+                            saleId = Convert.ToInt32(command.ExecuteScalar());
                         }
+
+                        foreach (DataRow row in cart.Rows)
+                        {
+                            using (SqlCommand command = new SqlCommand(@"
+                                INSERT INTO SaleItems (SaleID, ProductID, Quantity, UnitPrice, Subtotal)
+                                VALUES (@SaleID, @ProductID, @Quantity, @Price, @Subtotal);", con, transaction))
+                            {
+                                command.Parameters.AddWithValue("@SaleID", saleId);
+                                command.Parameters.AddWithValue("@ProductID", Convert.ToInt32(row["ProductID"]));
+                                command.Parameters.AddWithValue("@Quantity", Convert.ToInt32(row["Quantity"]));
+                                command.Parameters.AddWithValue("@Price", Convert.ToDecimal(row["Price"]));
+                                command.Parameters.AddWithValue("@Subtotal", Convert.ToDecimal(row["Subtotal"]));
+                                command.ExecuteNonQuery();
+                            }
+                        }
+
+                        transaction.Commit();
                     }
-
-                    trans.Commit();
-
-                    MessageBox.Show(
-                        "Sale saved successfully. Proceed to payment."
-                    );
-
-                    cart.Clear();
-                    UpdateTotal();
-                    txtCustomerName.Clear();
-
-                    txtInvoiceNumber.Text =
-                        "INV-" + Guid.NewGuid().ToString("N")
-                        .Substring(0, 8).ToUpper();
-
-                    LoadProducts();
-
-                    // Open Payment only after the Sales form has reset.
-                    PaymentRequested?.Invoke(saleId);
-                }
-                catch (Exception ex)
-                {
-                    trans.Rollback();
-
-                    MessageBox.Show(
-                        "Unable to save sale: " + ex.Message
-                    );
+                    catch (Exception ex)
+                    {
+                        try { transaction.Rollback(); } catch { }
+                        MessageBox.Show("Unable to save this sale. No sale items were committed.\n\n" + ex.Message, "Sales Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
                 }
             }
+
+            paymentRequested = true;
+            MessageBox.Show("Sale saved successfully. Continue to payment.", "Sale Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            PaymentRequested?.Invoke(saleId);
         }
-       
 
         private void SalesTransaction_Load(object sender, EventArgs e)
         {
-
         }
     }
 }

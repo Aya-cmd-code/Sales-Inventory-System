@@ -1,17 +1,20 @@
-﻿using System;
+﻿
+using System;
 using System.Windows.Forms;
 
 namespace Sales___Inventory_Log_In
 {
     public partial class LoginForm : Form
     {
-        private readonly AuthService authService = new AuthService();
         private bool openingLandingPage;
 
         public LoginForm()
         {
             InitializeComponent();
+
             txtPassword.UseSystemPasswordChar = true;
+            txtPassword.PasswordChar = '*';
+
             btnLogin.Click -= btnLogin_Click;
             btnLogin.Click += btnLogin_Click;
         }
@@ -23,37 +26,79 @@ namespace Sales___Inventory_Log_In
 
             string username = txtUsername.Text.Trim();
             string password = txtPassword.Text;
+
             string role = rbAdmin.Checked ? "Admin" :
                           rbCashier.Checked ? "Cashier" :
-                          rbInventory.Checked ? "Inventory" : string.Empty;
+                          rbInventory.Checked ? "Inventory" : "";
 
-            if (username.Length == 0 || password.Length == 0 || role.Length == 0)
+            if (string.IsNullOrWhiteSpace(username) ||
+                string.IsNullOrWhiteSpace(password) ||
+                string.IsNullOrWhiteSpace(role))
             {
-                MessageBox.Show("Enter your username, password, and select your role.", "Missing Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "Enter your username, password, and select your role.",
+                    "Missing Information",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                return;
+            }
+
+            string correctPassword = "";
+
+            switch (role)
+            {
+                case "Admin":
+                    correctPassword = "admin123";
+                    break;
+
+                case "Inventory":
+                    correctPassword = "inventory123";
+                    break;
+
+                case "Cashier":
+                    correctPassword = "cashier123";
+                    break;
+            }
+
+            if (password != correctPassword)
+            {
+                MessageBox.Show(
+                    "Incorrect password for the selected role.",
+                    "Login Failed",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+
+                txtPassword.Clear();
+                txtPassword.Focus();
                 return;
             }
 
             try
             {
-                if (!authService.Login(username, password, role))
-                {
-                    MessageBox.Show("Invalid username, password, or role.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
                 openingLandingPage = true;
+
                 LandingPage landing = new LandingPage(role);
-                landing.FormClosed += delegate
-                {
-                    txtPassword.Clear();
-                    txtUsername.Clear();
-                    openingLandingPage = false;
-                    if (!IsDisposed)
-                        Show();
-                };
+
                 landing.LogoutRequested += delegate
                 {
                     landing.Close();
+                };
+
+                landing.FormClosed += delegate
+                {
+                    txtUsername.Clear();
+                    txtPassword.Clear();
+
+                    rbAdmin.Checked = false;
+                    rbCashier.Checked = false;
+                    rbInventory.Checked = false;
+
+                    openingLandingPage = false;
+
+                    if (!IsDisposed)
+                        Show();
                 };
 
                 Hide();
@@ -62,8 +107,20 @@ namespace Sales___Inventory_Log_In
             catch (Exception ex)
             {
                 openingLandingPage = false;
-                MessageBox.Show("Unable to log in. Check your database connection and Users table.\n\n" + ex.Message, "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    "Unable to open Landing Page.\n\n" + ex.Message,
+                    "Login Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+
+                Show();
             }
+        }
+
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
         }
     }
 }

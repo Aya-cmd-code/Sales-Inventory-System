@@ -159,5 +159,10 @@ namespace Sales___Inventory_Log_In
             }
             base.OnFormClosed(e);
         }
+
+        private void pnlMainContent_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

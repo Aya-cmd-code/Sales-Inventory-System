@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -39,7 +40,10 @@ namespace Sales___Inventory_Log_In
 
             cmbPaymentMethod.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbPaymentMethod.Items.Clear();
-            cmbPaymentMethod.Items.AddRange(new object[] { "Cash", "GCash", "Bank Transfer", "Card" });
+            cmbPaymentMethod.Items.AddRange(new object[]
+            {
+                "Cash", "GCash", "Bank Transfer", "Card"
+            });
 
             btnProcessPayment.Click += btnProcessPayment_Click;
             btnCancelPayment.Click += btnCancelPayment_Click;
@@ -52,6 +56,7 @@ namespace Sales___Inventory_Log_In
 
             receiptDocument.PrintPage += receiptDocument_PrintPage;
             printPreviewReceipt.Document = receiptDocument;
+
             txtChange.Text = "Select an unpaid invoice.";
         }
 
@@ -63,23 +68,27 @@ namespace Sales___Inventory_Log_In
                 using (SqlCommand cmd = new SqlCommand(@"
                     SELECT TOP 1 SaleID
                     FROM Sales
-                    WHERE PaymentStatus <> 'Paid'
+                    WHERE SaleStatus <> 'Paid'
                     ORDER BY SaleDate DESC, SaleID DESC;", con))
                 {
                     con.Open();
                     object result = cmd.ExecuteScalar();
+
                     if (result == null || result == DBNull.Value)
                     {
                         txtChange.Text = "No unpaid invoices found.";
                         return;
                     }
+
                     saleId = Convert.ToInt32(result);
                 }
+
                 LoadSale();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to find an unpaid invoice.\n\n" + ex.Message, "Payment Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Unable to find an unpaid invoice.\n\n" + ex.Message,
+                    "Payment Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -91,11 +100,13 @@ namespace Sales___Inventory_Log_In
             {
                 using (SqlConnection con = database.GetConnection())
                 using (SqlCommand cmd = new SqlCommand(@"
-                    SELECT InvoiceNumber, CustomerName, TotalAmount
-                    FROM Sales WHERE SaleID = @ID;", con))
+                    SELECT InvoiceNo, CustomerName, TotalAmount
+                    FROM Sales
+                    WHERE SaleID = @ID;", con))
                 {
                     cmd.Parameters.AddWithValue("@ID", saleId);
                     con.Open();
+
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (!reader.Read())
@@ -104,7 +115,8 @@ namespace Sales___Inventory_Log_In
                             saleId = 0;
                             return;
                         }
-                        txtInvoiceNumber.Text = Convert.ToString(reader["InvoiceNumber"]);
+
+                        txtInvoiceNumber.Text = Convert.ToString(reader["InvoiceNo"]);
                         txtCustomerName.Text = Convert.ToString(reader["CustomerName"]);
                         totalAmount = Convert.ToDecimal(reader["TotalAmount"]);
                         txtTotalAmount.Text = totalAmount.ToString("N2");
@@ -116,7 +128,8 @@ namespace Sales___Inventory_Log_In
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to load sale details.\n\n" + ex.Message, "Payment Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Unable to load sale details.\n\n" + ex.Message,
+                    "Payment Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -125,8 +138,11 @@ namespace Sales___Inventory_Log_In
             using (SqlConnection con = database.GetConnection())
             {
                 using (SqlDataAdapter adapter = new SqlDataAdapter(@"
-                    SELECT PaymentMethod, AmountReceived, AmountPaid, ChangeAmount, PaymentDate
-                    FROM Payments WHERE SaleID = @ID ORDER BY PaymentDate DESC;", con))
+                    SELECT PaymentMethod, AmountReceived, AmountPaid,
+                           ChangeAmount, PaymentDate
+                    FROM Payments
+                    WHERE SaleID = @ID
+                    ORDER BY PaymentDate DESC;", con))
                 {
                     adapter.SelectCommand.Parameters.AddWithValue("@ID", saleId);
                     DataTable table = new DataTable();
@@ -134,7 +150,10 @@ namespace Sales___Inventory_Log_In
                     dgvPaymentDetails.DataSource = table;
                 }
 
-                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(SUM(AmountPaid), 0) FROM Payments WHERE SaleID = @ID;", con))
+                using (SqlCommand cmd = new SqlCommand(@"
+                    SELECT ISNULL(SUM(AmountPaid), 0)
+                    FROM Payments
+                    WHERE SaleID = @ID;", con))
                 {
                     cmd.Parameters.AddWithValue("@ID", saleId);
                     con.Open();
@@ -157,9 +176,10 @@ namespace Sales___Inventory_Log_In
         {
             if (saleId <= 0)
             {
-                MessageBox.Show("There is no invoice selected. Create a sale first or select an unpaid invoice.");
+                MessageBox.Show("There is no invoice selected.");
                 return;
             }
+
             if (cmbPaymentMethod.SelectedIndex < 0)
             {
                 MessageBox.Show("Select a payment method.");
@@ -167,7 +187,8 @@ namespace Sales___Inventory_Log_In
             }
 
             decimal received;
-            if (!decimal.TryParse(txtAmountReceived.Text.Trim(), out received) || received <= 0m)
+
+            if (!decimal.TryParse(txtAmountReceived.Text.Trim(), out received) || received <= 0)
             {
                 MessageBox.Show("Enter a valid amount received.");
                 txtAmountReceived.Focus();
@@ -175,7 +196,8 @@ namespace Sales___Inventory_Log_In
             }
 
             decimal balance = GetBalance();
-            if (balance <= 0m)
+
+            if (balance <= 0)
             {
                 MessageBox.Show("This invoice is already fully paid.");
                 return;
@@ -187,40 +209,42 @@ namespace Sales___Inventory_Log_In
             using (SqlConnection con = database.GetConnection())
             {
                 con.Open();
+
                 using (SqlTransaction transaction = con.BeginTransaction())
                 {
                     try
                     {
-                        using (SqlCommand command = new SqlCommand(@"
-                            INSERT INTO Payments (SaleID, PaymentMethod, AmountReceived, AmountPaid, ChangeAmount)
-                            VALUES (@SaleID, @Method, @Received, @Applied, @Change);", con, transaction))
-                        {
-                            command.Parameters.AddWithValue("@SaleID", saleId);
-                            command.Parameters.AddWithValue("@Method", cmbPaymentMethod.Text);
-                            command.Parameters.AddWithValue("@Received", received);
-                            command.Parameters.AddWithValue("@Applied", applied);
-                            command.Parameters.AddWithValue("@Change", change);
-                            command.ExecuteNonQuery();
-                        }
-
                         bool stockDeducted;
-                        using (SqlCommand command = new SqlCommand("SELECT StockDeducted FROM Sales WITH (UPDLOCK, HOLDLOCK) WHERE SaleID = @ID;", con, transaction))
+
+                        using (SqlCommand command = new SqlCommand(@"
+                            SELECT StockDeducted
+                            FROM Sales WITH (UPDLOCK, HOLDLOCK)
+                            WHERE SaleID = @ID;", con, transaction))
                         {
                             command.Parameters.AddWithValue("@ID", saleId);
                             object result = command.ExecuteScalar();
+
                             if (result == null || result == DBNull.Value)
-                                throw new Exception("The sale record or StockDeducted value is missing. Run the supplied database setup script.");
+                                throw new Exception("Unable to find the sale stock status.");
+
                             stockDeducted = Convert.ToBoolean(result);
                         }
 
                         if (!stockDeducted)
                         {
                             DataTable items = new DataTable();
-                            using (SqlDataAdapter adapter = new SqlDataAdapter("SELECT ProductID, Quantity FROM SaleItems WHERE SaleID = @ID;", con))
+
+                            using (SqlCommand command = new SqlCommand(@"
+                                SELECT ProductID, Quantity
+                                FROM SaleItems
+                                WHERE SaleID = @ID;", con, transaction))
                             {
-                                adapter.SelectCommand.Transaction = transaction;
-                                adapter.SelectCommand.Parameters.AddWithValue("@ID", saleId);
-                                adapter.Fill(items);
+                                command.Parameters.AddWithValue("@ID", saleId);
+
+                                using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                                {
+                                    adapter.Fill(items);
+                                }
                             }
 
                             if (items.Rows.Count == 0)
@@ -228,42 +252,104 @@ namespace Sales___Inventory_Log_In
 
                             foreach (DataRow item in items.Rows)
                             {
+                                int productId = Convert.ToInt32(item["ProductID"]);
+                                int quantity = Convert.ToInt32(item["Quantity"]);
+                                int previousStock;
+
+                                using (SqlCommand command = new SqlCommand(@"
+                                    SELECT StockQuantity
+                                    FROM Products WITH (UPDLOCK, HOLDLOCK)
+                                    WHERE ProductID = @ID
+                                    AND IsActive = 1;", con, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@ID", productId);
+                                    object result = command.ExecuteScalar();
+
+                                    if (result == null || result == DBNull.Value)
+                                        throw new Exception("A product is missing or inactive.");
+
+                                    previousStock = Convert.ToInt32(result);
+                                }
+
+                                if (previousStock < quantity)
+                                    throw new Exception("Insufficient stock for Product ID " + productId);
+
+                                int newStock = previousStock - quantity;
+
                                 using (SqlCommand command = new SqlCommand(@"
                                     UPDATE Products
-                                    SET StockQuantity = StockQuantity - @Quantity,
+                                    SET StockQuantity = @Stock,
                                         Status = CASE
-                                            WHEN StockQuantity - @Quantity <= 0 THEN 'Out of Stock'
-                                            WHEN StockQuantity - @Quantity <= ReorderLevel THEN 'Low Stock'
-                                            ELSE 'Available' END
-                                    WHERE ProductID = @ProductID AND IsActive = 1 AND StockQuantity >= @Quantity;", con, transaction))
+                                            WHEN @Stock = 0 THEN 'Out of Stock'
+                                            WHEN @Stock <= ReorderLevel THEN 'Low Stock'
+                                            ELSE 'Active'
+                                        END
+                                    WHERE ProductID = @ID;", con, transaction))
                                 {
-                                    command.Parameters.AddWithValue("@Quantity", Convert.ToInt32(item["Quantity"]));
-                                    command.Parameters.AddWithValue("@ProductID", Convert.ToInt32(item["ProductID"]));
-                                    if (command.ExecuteNonQuery() != 1)
-                                        throw new Exception("Insufficient stock or inactive product. Payment was not saved.");
+                                    command.Parameters.AddWithValue("@Stock", newStock);
+                                    command.Parameters.AddWithValue("@ID", productId);
+                                    command.ExecuteNonQuery();
                                 }
 
                                 using (SqlCommand command = new SqlCommand(@"
-                                    INSERT INTO InventoryLogs (ProductID, [Action], Quantity, Reason)
-                                    VALUES (@ProductID, 'Sale', @Quantity, @Reason);", con, transaction))
+                                    INSERT INTO InventoryLogs
+                                    (ProductID, ProductName, [Action],
+                                     QuantityChanged, PreviousStock, NewStock, Reason)
+                                    SELECT ProductID, ProductName, 'Sale',
+                                           @Quantity, @Previous, @New, @Reason
+                                    FROM Products
+                                    WHERE ProductID = @ID;", con, transaction))
                                 {
-                                    command.Parameters.AddWithValue("@ProductID", Convert.ToInt32(item["ProductID"]));
-                                    command.Parameters.AddWithValue("@Quantity", Convert.ToInt32(item["Quantity"]));
-                                    command.Parameters.AddWithValue("@Reason", "Sale invoice " + txtInvoiceNumber.Text);
+                                    command.Parameters.AddWithValue("@ID", productId);
+                                    command.Parameters.AddWithValue("@Quantity", quantity);
+                                    command.Parameters.AddWithValue("@Previous", previousStock);
+                                    command.Parameters.AddWithValue("@New", newStock);
+                                    command.Parameters.AddWithValue("@Reason",
+                                        "Sale invoice " + txtInvoiceNumber.Text);
+
                                     command.ExecuteNonQuery();
                                 }
                             }
 
-                            using (SqlCommand command = new SqlCommand("UPDATE Sales SET StockDeducted = 1 WHERE SaleID = @ID;", con, transaction))
+                            using (SqlCommand command = new SqlCommand(@"
+                                UPDATE Sales
+                                SET StockDeducted = 1
+                                WHERE SaleID = @ID;", con, transaction))
                             {
                                 command.Parameters.AddWithValue("@ID", saleId);
                                 command.ExecuteNonQuery();
                             }
                         }
 
-                        decimal newPaid = previouslyPaid + applied;
-                        string status = newPaid >= totalAmount ? "Paid" : "Partially Paid";
-                        using (SqlCommand command = new SqlCommand("UPDATE Sales SET PaymentStatus = @Status WHERE SaleID = @ID;", con, transaction))
+                        string status = previouslyPaid + applied >= totalAmount
+                            ? "Paid" : "Partially Paid";
+
+                        using (SqlCommand command = new SqlCommand(@"
+                            INSERT INTO Payments
+                            (SaleID, InvoiceNo, CustomerName, TotalAmount,
+                             PaymentMethod, AmountReceived, AmountPaid,
+                             ChangeAmount, PaymentStatus)
+                            VALUES
+                            (@SaleID, @InvoiceNo, @Customer, @Total,
+                             @Method, @Received, @Applied,
+                             @Change, @Status);", con, transaction))
+                        {
+                            command.Parameters.AddWithValue("@SaleID", saleId);
+                            command.Parameters.AddWithValue("@InvoiceNo", txtInvoiceNumber.Text);
+                            command.Parameters.AddWithValue("@Customer", txtCustomerName.Text);
+                            command.Parameters.AddWithValue("@Total", totalAmount);
+                            command.Parameters.AddWithValue("@Method", cmbPaymentMethod.Text);
+                            command.Parameters.AddWithValue("@Received", received);
+                            command.Parameters.AddWithValue("@Applied", applied);
+                            command.Parameters.AddWithValue("@Change", change);
+                            command.Parameters.AddWithValue("@Status", status);
+                            command.ExecuteNonQuery();
+                        }
+
+                        using (SqlCommand command = new SqlCommand(@"
+                            UPDATE Sales
+                            SET SaleStatus = @Status
+                            WHERE SaleID = @ID;", con, transaction))
                         {
                             command.Parameters.AddWithValue("@Status", status);
                             command.Parameters.AddWithValue("@ID", saleId);
@@ -271,14 +357,27 @@ namespace Sales___Inventory_Log_In
                         }
 
                         transaction.Commit();
-                        MessageBox.Show("Payment recorded successfully.\nAmount applied: ₱" + applied.ToString("N2") + "\nChange: ₱" + change.ToString("N2"), "Payment Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        MessageBox.Show(
+                            "Payment recorded successfully.\nAmount applied: ₱" +
+                            applied.ToString("N2") +
+                            "\nChange: ₱" + change.ToString("N2"),
+                            "Payment Successful",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+
                         LoadSale();
                         txtAmountReceived.Clear();
                     }
                     catch (Exception ex)
                     {
                         try { transaction.Rollback(); } catch { }
-                        MessageBox.Show("Payment failed. No payment or stock changes were committed.\n\n" + ex.Message, "Payment Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                        MessageBox.Show(
+                            "Payment failed. No payment or stock changes were committed.\n\n" + ex.Message,
+                            "Payment Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
                     }
                 }
             }
@@ -296,12 +395,14 @@ namespace Sales___Inventory_Log_In
                 MessageBox.Show("There is no invoice to print.");
                 return;
             }
+
             printPreviewReceipt.ShowDialog(this);
         }
 
         private void receiptDocument_PrintPage(object sender, PrintPageEventArgs e)
         {
             float y = 40;
+
             using (Font heading = new Font("Arial", 16, FontStyle.Bold))
             using (Font normal = new Font("Arial", 10))
             {
@@ -321,7 +422,12 @@ namespace Sales___Inventory_Log_In
                 y += 35;
                 e.Graphics.DrawString("Thank you for your purchase!", normal, Brushes.Black, 40, y);
             }
+
             e.HasMorePages = false;
+        }
+
+        private void Payment_Form_Load(object sender, EventArgs e)
+        {
         }
     }
 }

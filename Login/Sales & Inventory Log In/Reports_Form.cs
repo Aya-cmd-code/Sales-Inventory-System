@@ -192,5 +192,10 @@ namespace Sales___Inventory_Log_In
 
         private void btnCloseReport_Click(object sender, EventArgs e) { Close(); }
         private void panel3_Paint(object sender, PaintEventArgs e) { }
+
+        private void Reports_Form_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

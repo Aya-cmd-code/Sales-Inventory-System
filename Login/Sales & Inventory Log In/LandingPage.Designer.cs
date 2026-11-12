@@ -223,6 +223,7 @@
             this.pnlMainContent.Name = "pnlMainContent";
             this.pnlMainContent.Size = new System.Drawing.Size(731, 448);
             this.pnlMainContent.TabIndex = 17;
+            this.pnlMainContent.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMainContent_Paint);
             // 
             // LandingPage
             // 
