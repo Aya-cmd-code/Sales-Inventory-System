@@ -347,7 +347,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "SalesTransaction";
             this.Text = "SalesTransaction";
-            this.Load += new System.EventHandler(this.SalesTransaction_Load);
+           
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);

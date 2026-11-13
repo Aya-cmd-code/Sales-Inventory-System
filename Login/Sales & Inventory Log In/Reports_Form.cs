@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -15,10 +14,16 @@ namespace Sales___Inventory_Log_In
         private DataTable currentReport = new DataTable();
         private readonly PrintDocument reportDocument = new PrintDocument();
         private int printRowIndex;
+        private readonly bool canEdit;
 
-        public Reports_Form()
+        public Reports_Form() : this(true)
+        {
+        }
+
+        public Reports_Form(bool canEdit)
         {
             InitializeComponent();
+            this.canEdit = canEdit;
 
             dtpStartDate.Value = DateTime.Today.AddDays(-30);
             dtpEndDate.Value = DateTime.Today;
@@ -44,7 +49,18 @@ namespace Sales___Inventory_Log_In
             dgvReportRecords.SelectionMode =
                 DataGridViewSelectionMode.FullRowSelect;
 
+            SetReportPermissions();
             LoadSalesReport();
+        }
+
+        private void SetReportPermissions()
+        {
+            btnSalesReport.Enabled = canEdit;
+            btnInventoryReport.Enabled = canEdit;
+            btnGenerateReport.Enabled = canEdit;
+            btnPrintReport.Enabled = canEdit;
+            dtpStartDate.Enabled = canEdit;
+            dtpEndDate.Enabled = canEdit;
         }
 
         private bool ValidateDates()
@@ -60,6 +76,12 @@ namespace Sales___Inventory_Log_In
 
         private void btnSalesReport_Click(object sender, EventArgs e)
         {
+            if (!canEdit)
+            {
+                MessageBox.Show("You are not authorized to change report settings.");
+                return;
+            }
+
             reportType = "Sales";
 
             if (ValidateDates())
@@ -68,12 +90,24 @@ namespace Sales___Inventory_Log_In
 
         private void btnInventoryReport_Click(object sender, EventArgs e)
         {
+            if (!canEdit)
+            {
+                MessageBox.Show("You are not authorized to change report settings.");
+                return;
+            }
+
             reportType = "Inventory";
             LoadInventoryReport();
         }
 
         private void btnGenerateReport_Click(object sender, EventArgs e)
         {
+            if (!canEdit)
+            {
+                MessageBox.Show("You are not authorized to generate reports.");
+                return;
+            }
+
             if (!ValidateDates())
                 return;
 
@@ -91,11 +125,11 @@ namespace Sales___Inventory_Log_In
                 using (SqlDataAdapter adapter = new SqlDataAdapter(@"
                     SELECT
                         s.SaleID,
-                        s.InvoiceNo AS InvoiceNumber,
+                        s.InvoiceNumber,
                         s.CustomerName,
                         s.SaleDate,
                         s.TotalAmount,
-                        s.SaleStatus AS PaymentStatus
+                        s.PaymentStatus
                     FROM Sales s
                     WHERE s.SaleDate >= @StartDate
                     AND s.SaleDate < @EndDate
@@ -195,6 +229,12 @@ namespace Sales___Inventory_Log_In
 
         private void btnPrintReport_Click(object sender, EventArgs e)
         {
+            if (!canEdit)
+            {
+                MessageBox.Show("You are not authorized to print reports.");
+                return;
+            }
+
             if (currentReport == null || currentReport.Rows.Count == 0)
             {
                 MessageBox.Show("There are no records to print.");
