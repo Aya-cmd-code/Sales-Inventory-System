@@ -1,4 +1,4 @@
-﻿
+﻿```csharp
 using System;
 using System.Windows.Forms;
 
@@ -16,8 +16,7 @@ namespace Sales___Inventory_Log_In
         {
             InitializeComponent();
 
-            currentRole = role ?? "";
-
+            currentRole = role ?? string.Empty;
             lblWelcome.Text = "Welcome, " + currentRole;
 
             lblProductManagement.Click += lblProductManagement_Click;
@@ -28,24 +27,6 @@ namespace Sales___Inventory_Log_In
             lblLogout.Click += lblLogout_Click;
 
             ApplyRolePermissions();
-        }
-
-        private bool CanManage(string module)
-        {
-            switch (currentRole.Trim().ToLower())
-            {
-                case "admin":
-                    return module == "products" || module == "reports";
-
-                case "cashier":
-                    return module == "sales" || module == "payment";
-
-                case "inventory":
-                    return module == "inventory";
-
-                default:
-                    return false;
-            }
         }
 
         private void OpenForm(Form childForm)
@@ -79,17 +60,43 @@ namespace Sales___Inventory_Log_In
                 if (childForm != currentChildForm)
                     childForm.Dispose();
 
-                MessageBox.Show(
-                    "Unable to open this form.\n\n" + ex.Message,
-                    "Navigation Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MessageBox.Show("Unable to open this form.\n\n" + ex.Message,
+                    "Navigation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void ShowNavigationError(Exception ex)
+        {
+            MessageBox.Show("The selected page could not be opened.\n\n" + ex.Message,
+                "Form Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private bool CanManage(string module)
+        {
+            string role = (currentRole ?? string.Empty).Trim().ToLowerInvariant();
+
+            if (role == "admin")
+                return module == "products" || module == "reports";
+
+            if (role == "cashier")
+                return module == "sales" || module == "payment";
+
+            if (role == "inventory")
+                return module == "inventory";
+
+            return false;
         }
 
         private void lblProductManagement_Click(object sender, EventArgs e)
         {
-            OpenForm(new ProductManagement(CanManage("products")));
+            try
+            {
+                OpenForm(new ProductManagement(CanManage("products")));
+            }
+            catch (Exception ex)
+            {
+                ShowNavigationError(ex);
+            }
         }
 
         private void lblSalesTransaction_Click(object sender, EventArgs e)
@@ -101,8 +108,7 @@ namespace Sales___Inventory_Log_In
             {
                 isOpeningForm = true;
 
-                SalesTransaction salesForm =
-                    new SalesTransaction(CanManage("sales"));
+                SalesTransaction salesForm = new SalesTransaction(CanManage("sales"));
 
                 salesForm.PaymentRequested += delegate (int saleId)
                 {
@@ -112,7 +118,16 @@ namespace Sales___Inventory_Log_In
                     BeginInvoke((Action)delegate
                     {
                         if (!IsDisposed)
-                            OpenForm(new Payment_Form(saleId, CanManage("payment")));
+                        {
+                            try
+                            {
+                                OpenForm(new Payment_Form(saleId, CanManage("payment")));
+                            }
+                            catch (Exception ex)
+                            {
+                                ShowNavigationError(ex);
+                            }
+                        }
                     });
                 };
 
@@ -120,11 +135,7 @@ namespace Sales___Inventory_Log_In
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    "Unable to open Sales Transaction.\n\n" + ex.Message,
-                    "Form Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                ShowNavigationError(ex);
             }
             finally
             {
@@ -134,25 +145,44 @@ namespace Sales___Inventory_Log_In
 
         private void lblPayment_Click(object sender, EventArgs e)
         {
-            OpenForm(new Payment_Form(CanManage("payment")));
+            try
+            {
+                OpenForm(new Payment_Form(CanManage("payment")));
+            }
+            catch (Exception ex)
+            {
+                ShowNavigationError(ex);
+            }
         }
 
         private void lblInventoryUpdate_Click(object sender, EventArgs e)
         {
-            OpenForm(new InventoryUpdate(CanManage("inventory")));
+            try
+            {
+                OpenForm(new InventoryUpdate(CanManage("inventory")));
+            }
+            catch (Exception ex)
+            {
+                ShowNavigationError(ex);
+            }
         }
 
         private void lblReports_Click(object sender, EventArgs e)
         {
-            OpenForm(new Reports_Form(CanManage("reports")));
+            try
+            {
+                OpenForm(new Reports_Form(CanManage("reports")));
+            }
+            catch (Exception ex)
+            {
+                ShowNavigationError(ex);
+            }
         }
 
         private void lblLogout_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(
-                "Are you sure you want to logout?",
-                "Confirm Logout",
-                MessageBoxButtons.YesNo,
+            if (MessageBox.Show("Are you sure you want to logout?",
+                "Confirm Logout", MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 LogoutRequested?.Invoke(this, EventArgs.Empty);

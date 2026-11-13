@@ -429,5 +429,10 @@ namespace Sales___Inventory_Log_In
         private void Payment_Form_Load(object sender, EventArgs e)
         {
         }
+
+        private void Payment_Form_Load_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
