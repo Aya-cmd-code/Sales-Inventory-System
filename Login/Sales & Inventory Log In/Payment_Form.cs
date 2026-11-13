@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -15,17 +14,28 @@ namespace Sales___Inventory_Log_In
         private decimal totalAmount;
         private decimal previouslyPaid;
         private readonly PrintDocument receiptDocument = new PrintDocument();
+        private readonly bool canEdit;
 
-        public Payment_Form()
+        public Payment_Form() : this(true)
+        {
+        }
+
+        public Payment_Form(bool canEdit)
         {
             InitializeComponent();
+            this.canEdit = canEdit;
             SetupPaymentForm();
             LoadLatestUnpaidSale();
         }
 
-        public Payment_Form(int selectedSaleId)
+        public Payment_Form(int selectedSaleId) : this(selectedSaleId, true)
+        {
+        }
+
+        public Payment_Form(int selectedSaleId, bool canEdit)
         {
             InitializeComponent();
+            this.canEdit = canEdit;
             SetupPaymentForm();
             saleId = selectedSaleId;
             LoadSale();
@@ -49,6 +59,8 @@ namespace Sales___Inventory_Log_In
             btnCancelPayment.Click += btnCancelPayment_Click;
             btnPrintReceipt.Click += btnPrintReceipt_Click;
 
+            SetPaymentPermissions();
+
             dgvPaymentDetails.ReadOnly = true;
             dgvPaymentDetails.AllowUserToAddRows = false;
             dgvPaymentDetails.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -60,6 +72,13 @@ namespace Sales___Inventory_Log_In
             txtChange.Text = "Select an unpaid invoice.";
         }
 
+        private void SetPaymentPermissions()
+        {
+            btnProcessPayment.Enabled = canEdit;
+            cmbPaymentMethod.Enabled = canEdit;
+            txtAmountReceived.ReadOnly = !canEdit;
+        }
+
         private void LoadLatestUnpaidSale()
         {
             try
@@ -68,7 +87,7 @@ namespace Sales___Inventory_Log_In
                 using (SqlCommand cmd = new SqlCommand(@"
                     SELECT TOP 1 SaleID
                     FROM Sales
-                    WHERE SaleStatus <> 'Paid'
+                    WHERE PaymentStatus <> 'Paid'
                     ORDER BY SaleDate DESC, SaleID DESC;", con))
                 {
                     con.Open();
@@ -94,13 +113,14 @@ namespace Sales___Inventory_Log_In
 
         private void LoadSale()
         {
-            if (saleId <= 0) return;
+            if (saleId <= 0)
+                return;
 
             try
             {
                 using (SqlConnection con = database.GetConnection())
                 using (SqlCommand cmd = new SqlCommand(@"
-                    SELECT InvoiceNo, CustomerName, TotalAmount
+                    SELECT InvoiceNumber, CustomerName, TotalAmount
                     FROM Sales
                     WHERE SaleID = @ID;", con))
                 {
@@ -116,7 +136,7 @@ namespace Sales___Inventory_Log_In
                             return;
                         }
 
-                        txtInvoiceNumber.Text = Convert.ToString(reader["InvoiceNo"]);
+                        txtInvoiceNumber.Text = Convert.ToString(reader["InvoiceNumber"]);
                         txtCustomerName.Text = Convert.ToString(reader["CustomerName"]);
                         totalAmount = Convert.ToDecimal(reader["TotalAmount"]);
                         txtTotalAmount.Text = totalAmount.ToString("N2");
@@ -174,6 +194,12 @@ namespace Sales___Inventory_Log_In
 
         private void btnProcessPayment_Click(object sender, EventArgs e)
         {
+            if (!canEdit)
+            {
+                MessageBox.Show("You are not authorized to process payments.");
+                return;
+            }
+
             if (saleId <= 0)
             {
                 MessageBox.Show("There is no invoice selected.");
@@ -282,7 +308,7 @@ namespace Sales___Inventory_Log_In
                                         Status = CASE
                                             WHEN @Stock = 0 THEN 'Out of Stock'
                                             WHEN @Stock <= ReorderLevel THEN 'Low Stock'
-                                            ELSE 'Active'
+                                            ELSE 'Available'
                                         END
                                     WHERE ProductID = @ID;", con, transaction))
                                 {
@@ -348,7 +374,7 @@ namespace Sales___Inventory_Log_In
 
                         using (SqlCommand command = new SqlCommand(@"
                             UPDATE Sales
-                            SET SaleStatus = @Status
+                            SET PaymentStatus = @Status
                             WHERE SaleID = @ID;", con, transaction))
                         {
                             command.Parameters.AddWithValue("@Status", status);
@@ -371,7 +397,13 @@ namespace Sales___Inventory_Log_In
                     }
                     catch (Exception ex)
                     {
-                        try { transaction.Rollback(); } catch { }
+                        try
+                        {
+                            transaction.Rollback();
+                        }
+                        catch
+                        {
+                        }
 
                         MessageBox.Show(
                             "Payment failed. No payment or stock changes were committed.\n\n" + ex.Message,
@@ -428,11 +460,6 @@ namespace Sales___Inventory_Log_In
 
         private void Payment_Form_Load(object sender, EventArgs e)
         {
-        }
-
-        private void Payment_Form_Load_1(object sender, EventArgs e)
-        {
-
         }
     }
 }

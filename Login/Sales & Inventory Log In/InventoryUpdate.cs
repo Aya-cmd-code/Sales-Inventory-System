@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
@@ -9,10 +8,16 @@ namespace Sales___Inventory_Log_In
     public partial class InventoryUpdate : Form
     {
         private readonly DatabaseConnection database = new DatabaseConnection();
+        private readonly bool canEdit;
 
-        public InventoryUpdate()
+        public InventoryUpdate() : this(true)
+        {
+        }
+
+        public InventoryUpdate(bool canEdit)
         {
             InitializeComponent();
+            this.canEdit = canEdit;
 
             txtCurrentStock.ReadOnly = true;
 
@@ -33,8 +38,17 @@ namespace Sales___Inventory_Log_In
             cmbProduct.SelectedIndexChanged += cmbProduct_SelectedIndexChanged;
             btnUpdateStock.Click += btnUpdateStock_Click;
 
+            SetInventoryPermissions();
             LoadProducts();
             LoadInventoryLogs();
+        }
+
+        private void SetInventoryPermissions()
+        {
+            btnUpdateStock.Enabled = canEdit;
+            cmbAction.Enabled = canEdit;
+            nudQuantity.Enabled = canEdit;
+            txtReason.ReadOnly = !canEdit;
         }
 
         private void LoadProducts()
@@ -114,6 +128,12 @@ namespace Sales___Inventory_Log_In
 
         private void btnUpdateStock_Click(object sender, EventArgs e)
         {
+            if (!canEdit)
+            {
+                MessageBox.Show("You are not authorized to update inventory.");
+                return;
+            }
+
             DataRowView selected = cmbProduct.SelectedItem as DataRowView;
 
             if (selected == null)
@@ -179,7 +199,7 @@ namespace Sales___Inventory_Log_In
                                     Status = CASE
                                         WHEN @Stock = 0 THEN 'Out of Stock'
                                         WHEN @Stock <= ReorderLevel THEN 'Low Stock'
-                                        ELSE 'Active'
+                                        ELSE 'Available'
                                     END
                                 WHERE ProductID = @ID
                                 AND IsActive = 1;", con, transaction))
@@ -229,7 +249,14 @@ namespace Sales___Inventory_Log_In
                         }
                         catch
                         {
-                            try { transaction.Rollback(); } catch { }
+                            try
+                            {
+                                transaction.Rollback();
+                            }
+                            catch
+                            {
+                            }
+
                             throw;
                         }
                     }
