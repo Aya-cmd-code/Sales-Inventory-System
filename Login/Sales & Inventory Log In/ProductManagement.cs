@@ -7,18 +7,36 @@ namespace Sales___Inventory_Log_In
 {
     public partial class ProductManagement : Form
     {
-        private readonly DatabaseConnection database = new DatabaseConnection();
 
-        public ProductManagement()
+        private readonly bool canEdit;
+
+        public ProductManagement() : this(true)
+        {
+        }
+
+        public ProductManagement(bool canEdit)
         {
             InitializeComponent();
+
+            this.canEdit = canEdit;
+
             txtProductID.ReadOnly = true;
             cmbCategory.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbProductStatus.DropDownStyle = ComboBoxStyle.DropDownList;
+
             cmbCategory.Items.Clear();
-            cmbCategory.Items.AddRange(new object[] { "School Supplies", "Electronics", "Food", "Accessories", "Others" });
+            cmbCategory.Items.AddRange(new object[]
+            {
+        "School Supplies", "Electronics", "Food",
+        "Accessories", "Others"
+            });
+
             cmbProductStatus.Items.Clear();
-            cmbProductStatus.Items.AddRange(new object[] { "Available", "Low Stock", "Out of Stock" });
+            cmbProductStatus.Items.AddRange(new object[]
+            {
+        "Available", "Low Stock", "Out of Stock"
+            });
+
             cmbProductStatus.Enabled = false;
 
             dgvProducts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -34,11 +52,28 @@ namespace Sales___Inventory_Log_In
             btnRefreshProducts.Click += btnRefreshProducts_Click;
             btnSearchProduct.Click += btnSearchProduct_Click;
             dgvProducts.CellClick += dgvProducts_CellClick;
+
             txtStockQuantity.TextChanged += ProductFields_TextChanged;
             txtReorderLevel.TextChanged += ProductFields_TextChanged;
 
+            SetProductPermissions();
             LoadProducts();
         }
+
+        private void SetProductPermissions()
+        {
+            btnAddProduct.Enabled = canEdit;
+            btnUpdateProduct.Enabled = canEdit;
+            btnDeleteProduct.Enabled = canEdit;
+
+            txtProductName.ReadOnly = !canEdit;
+            txtPrice.ReadOnly = !canEdit;
+            txtStockQuantity.ReadOnly = !canEdit;
+            txtReorderLevel.ReadOnly = !canEdit;
+
+            cmbCategory.Enabled = canEdit;
+        }
+
 
         private void LoadProducts()
         {
@@ -62,6 +97,12 @@ namespace Sales___Inventory_Log_In
 
         private void btnAddProduct_Click(object sender, EventArgs e)
         {
+            if (!canEdit)
+            {
+                MessageBox.Show("You are not authorized to manage products.");
+                return;
+            }
+
             if (!ValidateFields()) return;
             try
             {
@@ -83,6 +124,11 @@ namespace Sales___Inventory_Log_In
 
         private void btnUpdateProduct_Click(object sender, EventArgs e)
         {
+            if (!canEdit)
+            {
+                MessageBox.Show("You are not authorized to manage products.");
+                return;
+            }
             int id;
             if (!int.TryParse(txtProductID.Text, out id))
             {
@@ -113,6 +159,11 @@ namespace Sales___Inventory_Log_In
 
         private void btnDeleteProduct_Click(object sender, EventArgs e)
         {
+            if (!canEdit)
+            {
+                MessageBox.Show("You are not authorized to manage products.");
+                return;
+            }
             int id;
             if (!int.TryParse(txtProductID.Text, out id))
             {

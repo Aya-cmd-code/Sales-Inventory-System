@@ -16,7 +16,7 @@ namespace Sales___Inventory_Log_In
         {
             InitializeComponent();
 
-            currentRole = role ?? string.Empty;
+            currentRole = role ?? "";
 
             lblWelcome.Text = "Welcome, " + currentRole;
 
@@ -28,6 +28,24 @@ namespace Sales___Inventory_Log_In
             lblLogout.Click += lblLogout_Click;
 
             ApplyRolePermissions();
+        }
+
+        private bool CanManage(string module)
+        {
+            switch (currentRole.Trim().ToLower())
+            {
+                case "admin":
+                    return module == "products" || module == "reports";
+
+                case "cashier":
+                    return module == "sales" || module == "payment";
+
+                case "inventory":
+                    return module == "inventory";
+
+                default:
+                    return false;
+            }
         }
 
         private void OpenForm(Form childForm)
@@ -53,7 +71,6 @@ namespace Sales___Inventory_Log_In
                 childForm.Dock = DockStyle.Fill;
 
                 pnlMainContent.Controls.Add(childForm);
-
                 childForm.Show();
                 childForm.BringToFront();
             }
@@ -70,25 +87,9 @@ namespace Sales___Inventory_Log_In
             }
         }
 
-        private void ShowNavigationError(Exception ex)
-        {
-            MessageBox.Show(
-                "The selected page could not be opened.\n\n" + ex.Message,
-                "Form Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
-        }
-
         private void lblProductManagement_Click(object sender, EventArgs e)
         {
-            try
-            {
-                OpenForm(new ProductManagement());
-            }
-            catch (Exception ex)
-            {
-                ShowNavigationError(ex);
-            }
+            OpenForm(new ProductManagement(CanManage("products")));
         }
 
         private void lblSalesTransaction_Click(object sender, EventArgs e)
@@ -100,7 +101,8 @@ namespace Sales___Inventory_Log_In
             {
                 isOpeningForm = true;
 
-                SalesTransaction salesForm = new SalesTransaction();
+                SalesTransaction salesForm =
+                    new SalesTransaction(CanManage("sales"));
 
                 salesForm.PaymentRequested += delegate (int saleId)
                 {
@@ -110,16 +112,7 @@ namespace Sales___Inventory_Log_In
                     BeginInvoke((Action)delegate
                     {
                         if (!IsDisposed)
-                        {
-                            try
-                            {
-                                OpenForm(new Payment_Form(saleId));
-                            }
-                            catch (Exception ex)
-                            {
-                                ShowNavigationError(ex);
-                            }
-                        }
+                            OpenForm(new Payment_Form(saleId, CanManage("payment")));
                     });
                 };
 
@@ -127,7 +120,11 @@ namespace Sales___Inventory_Log_In
             }
             catch (Exception ex)
             {
-                ShowNavigationError(ex);
+                MessageBox.Show(
+                    "Unable to open Sales Transaction.\n\n" + ex.Message,
+                    "Form Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
             finally
             {
@@ -137,38 +134,17 @@ namespace Sales___Inventory_Log_In
 
         private void lblPayment_Click(object sender, EventArgs e)
         {
-            try
-            {
-                OpenForm(new Payment_Form());
-            }
-            catch (Exception ex)
-            {
-                ShowNavigationError(ex);
-            }
+            OpenForm(new Payment_Form(CanManage("payment")));
         }
 
         private void lblInventoryUpdate_Click(object sender, EventArgs e)
         {
-            try
-            {
-                OpenForm(new InventoryUpdate());
-            }
-            catch (Exception ex)
-            {
-                ShowNavigationError(ex);
-            }
+            OpenForm(new InventoryUpdate(CanManage("inventory")));
         }
 
         private void lblReports_Click(object sender, EventArgs e)
         {
-            try
-            {
-                OpenForm(new Reports_Form());
-            }
-            catch (Exception ex)
-            {
-                ShowNavigationError(ex);
-            }
+            OpenForm(new Reports_Form(CanManage("reports")));
         }
 
         private void lblLogout_Click(object sender, EventArgs e)
